@@ -4,6 +4,8 @@
 *.tsbuildinfo# Directories
 dist/           # This is the build process will output code.
 node_modules/   # The original reason we're here!# Env files      # A good safeguard against accidentally publishing
+node_modules
+.idea
 .env.           #  private information, including security keys
 .env.test# Logs
 *.log
