@@ -1,4 +1,4 @@
-export interface PokemonData {
+export interface MoveData {
   name: string;
   types: string[];
   hp: number;

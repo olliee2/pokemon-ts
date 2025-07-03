@@ -25,7 +25,9 @@ const switch5Button = document.getElementById('switch-5-button');
 const switch6Button = document.getElementById('switch-6-button');
 const switchBackButton = document.getElementById('switch-back-button');
 const battleLog = document.getElementById('battle-log');
-const engine = new BattleEngine(pokemonData.slice(0, 6), pokemonData.slice(6));
+const allPokemonData = Object.values(pokemonData);
+const engine = new BattleEngine(allPokemonData.slice(0, 6), // player team: first 6
+allPokemonData.slice(6, 12));
 const renderer = new Renderer(engine, playerName, playerHP, playerImage, opponentName, opponentHP, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton, battleLog);
 engine.log();
 renderer.log();

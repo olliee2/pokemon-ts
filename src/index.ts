@@ -61,7 +61,13 @@ const switchBackButton = document.getElementById(
 )! as HTMLButtonElement;
 const battleLog = document.getElementById('battle-log')! as HTMLOListElement;
 
-const engine = new BattleEngine(pokemonData.slice(0, 6), pokemonData.slice(6));
+const allPokemonData = Object.values(pokemonData);
+
+const engine = new BattleEngine(
+  allPokemonData.slice(0, 6), // player team: first 6
+  allPokemonData.slice(6, 12), // opponent team: next 6
+);
+
 const renderer = new Renderer(
   engine,
   playerName,

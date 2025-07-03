@@ -1,6 +1,5 @@
-export const pokemonData = [
-    {
-        id: 3,
+export const pokemonData = {
+    3: {
         name: 'Venusaur',
         types: ['Grass', 'Poison'],
         hp: 348,
@@ -10,8 +9,7 @@ export const pokemonData = [
         speed: 233,
         moves: ['Tackle', 'Vine Whip', 'Razor Leaf', 'Solar Beam'],
     },
-    {
-        id: 6,
+    6: {
         name: 'Charizard',
         types: ['Fire', 'Flying'],
         hp: 339,
@@ -21,8 +19,7 @@ export const pokemonData = [
         speed: 253,
         moves: ['Scratch', 'Ember', 'Flamethrower', 'Fly'],
     },
-    {
-        id: 9,
+    9: {
         name: 'Blastoise',
         types: ['Water'],
         hp: 341,
@@ -32,8 +29,7 @@ export const pokemonData = [
         speed: 233,
         moves: ['Tackle', 'Water Gun', 'Hydro Pump', 'Skull Bash'],
     },
-    {
-        id: 12,
+    12: {
         name: 'Butterfree',
         types: ['Bug', 'Flying'],
         hp: 293,
@@ -43,8 +39,7 @@ export const pokemonData = [
         speed: 213,
         moves: ['Tackle', 'Confusion', 'Gust', 'Psybeam'],
     },
-    {
-        id: 15,
+    15: {
         name: 'Beedrill',
         types: ['Bug', 'Poison'],
         hp: 303,
@@ -54,8 +49,7 @@ export const pokemonData = [
         speed: 218,
         moves: ['Fury Attack', 'Twineedle', 'Rage', 'Pin Missile'],
     },
-    {
-        id: 18,
+    18: {
         name: 'Pidgeot',
         types: ['Normal', 'Flying'],
         hp: 319,
@@ -65,8 +59,7 @@ export const pokemonData = [
         speed: 236,
         moves: ['Gust', 'Wing Attack', 'Agility', 'Mirror Move'],
     },
-    {
-        id: 20,
+    20: {
         name: 'Raticate',
         types: ['Normal'],
         hp: 263,
@@ -76,8 +69,7 @@ export const pokemonData = [
         speed: 229,
         moves: ['Tackle', 'Hyper Fang', 'Super Fang', 'Scary Face'],
     },
-    {
-        id: 22,
+    22: {
         name: 'Fearow',
         types: ['Normal', 'Flying'],
         hp: 283,
@@ -87,8 +79,7 @@ export const pokemonData = [
         speed: 253,
         moves: ['Peck', 'Drill Peck', 'Fury Attack', 'Mirror Move'],
     },
-    {
-        id: 24,
+    24: {
         name: 'Arbok',
         types: ['Poison'],
         hp: 273,
@@ -98,8 +89,7 @@ export const pokemonData = [
         speed: 213,
         moves: ['Bite', 'Glare', 'Acid', 'Screech'],
     },
-    {
-        id: 26,
+    26: {
         name: 'Raichu',
         types: ['Electric'],
         hp: 273,
@@ -109,8 +99,7 @@ export const pokemonData = [
         speed: 253,
         moves: ['Thunder Shock', 'Thunderbolt', 'Quick Attack', 'Thunder'],
     },
-    {
-        id: 28,
+    28: {
         name: 'Sandslash',
         types: ['Ground'],
         hp: 313,
@@ -120,8 +109,7 @@ export const pokemonData = [
         speed: 193,
         moves: ['Scratch', 'Slash', 'Sand Attack', 'Fury Swipes'],
     },
-    {
-        id: 31,
+    31: {
         name: 'Nidoqueen',
         types: ['Poison', 'Ground'],
         hp: 353,
@@ -131,5 +119,5 @@ export const pokemonData = [
         speed: 207,
         moves: ['Body Slam', 'Earthquake', 'Poison Sting', 'Superpower'],
     },
-];
+};
 //# sourceMappingURL=pokemonData.js.map
