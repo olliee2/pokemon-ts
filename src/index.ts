@@ -3,13 +3,17 @@ import BattleEngine from './BattleEngine.js';
 import Renderer from './Renderer.js';
 
 const playerName = document.getElementById('player-name')!;
-const playerHP = document.getElementById('player-hp')! as HTMLProgressElement;
+const playerHP = document.getElementById('player-hp')!;
+const playerHPBar = document.getElementById(
+  'player-hp-bar',
+)! as HTMLProgressElement;
 const playerImage = document.getElementById(
   'player-image',
 )! as HTMLImageElement;
 const opponentName = document.getElementById('opponent-name')!;
-const opponentHP = document.getElementById(
-  'opponent-hp',
+const opponentHP = document.getElementById('opponent-hp')!;
+const opponentHPBar = document.getElementById(
+  'opponent-hp-bar',
 )! as HTMLProgressElement;
 const opponentImage = document.getElementById(
   'opponent-image',
@@ -72,9 +76,11 @@ const renderer = new Renderer(
   engine,
   playerName,
   playerHP,
+  playerHPBar,
   playerImage,
   opponentName,
   opponentHP,
+  opponentHPBar,
   opponentImage,
   mainButtons,
   moveButton,

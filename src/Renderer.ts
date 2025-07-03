@@ -6,10 +6,12 @@ export default class Renderer {
   constructor(
     private engine: BattleEngine,
     private playerName: HTMLElement,
-    private playerHP: HTMLProgressElement,
+    private playerHP: HTMLElement,
+    private playerHPBar: HTMLProgressElement,
     private playerImage: HTMLImageElement,
     private opponentName: HTMLElement,
-    private opponentHP: HTMLProgressElement,
+    private opponentHP: HTMLElement,
+    private opponentHPBar: HTMLProgressElement,
     private opponentImage: HTMLImageElement,
     private mainButtons: HTMLDivElement,
     private moveButton: HTMLButtonElement,
@@ -42,9 +44,13 @@ export default class Renderer {
     switchBackButton.addEventListener('click', () => {
       this.changeMenu('main');
     });
+
+    this.render();
   }
 
-  render(): void {}
+  render(): void {
+    this.changePokemon();
+  }
 
   changeMenu(menu: Menu): void {
     switch (menu) {
@@ -83,14 +89,30 @@ export default class Renderer {
     }
   }
 
+  changePokemon(): void {
+    const playerPokemon = this.engine.playerActivePokemon;
+    this.playerName.textContent = playerPokemon.name;
+    this.playerHP.textContent = `HP: ${playerPokemon.hp}/${playerPokemon.baseHP}`;
+    this.playerHPBar.value = playerPokemon.hp / playerPokemon.baseHP;
+    this.playerImage.src = `assets/back/${playerPokemon.name}.png`;
+
+    const opponentPokemon = this.engine.opponentActivePokemon;
+    this.opponentName.textContent = opponentPokemon.name;
+    this.opponentHP.textContent = `HP: ${opponentPokemon.hp}/${opponentPokemon.baseHP}`;
+    this.opponentHPBar.value = opponentPokemon.hp / opponentPokemon.baseHP;
+    this.opponentImage.src = `assets/back/${opponentPokemon.name}.png`;
+  }
+
   log(): void {
     console.log(
       this.engine,
       this.playerName,
       this.playerHP,
+      this.playerHPBar,
       this.playerImage,
       this.opponentName,
       this.opponentHP,
+      this.opponentHPBar,
       this.opponentImage,
       this.mainButtons,
       this.moveButton,

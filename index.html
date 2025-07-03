@@ -7,8 +7,8 @@
             content="width=device-width, initial-scale=1.0, user-scalable=no"
             name="viewport"
     />
-    <link href="./favicon.png" rel="icon"/>
-    <link href="./styles.css" rel="stylesheet"/>
+    <link href="favicon.png" rel="icon"/>
+    <link href="styles.css" rel="stylesheet"/>
 </head>
 <body>
 <h1>Pokémon TS</h1>
@@ -16,14 +16,14 @@
 <main id="main">
     <div id="player-container">
         <p id="player-name">Venusaur</p>
-        <label for="player-hp">HP:</label>
-        <progress id="player-hp" max="1" value="1"></progress>
+        <label for="player-hp-bar" id="player-hp">HP: 0/0</label>
+        <progress id="player-hp-bar" max="1" value="1"></progress>
         <img alt="Player Pokémon" id="player-image" src="assets/back/Venusaur.png">
     </div>
     <div id="opponent-pokemon-container">
         <p id="opponent-name">Charizard</p>
-        <label for="opponent-hp">HP:</label>
-        <progress id="opponent-hp" max="1" value="1"></progress>
+        <label for="opponent-hp-bar" id="opponent-hp">HP: 0/0</label>
+        <progress id="opponent-hp-bar" max="1" value="1"></progress>
         <img alt="Opponent Pokémon" id="opponent-image" src="assets/front/Charizard.png">
     </div>
     <div id="main-buttons">
@@ -50,6 +50,6 @@
         <li>Pokémon TS</li>
     </ol>
 </main>
-<script src="./dist/index.js" type="module"></script>
+<script src="dist/index.js" type="module"></script>
 </body>
 </html>
