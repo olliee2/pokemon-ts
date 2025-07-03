@@ -41,21 +41,34 @@ export default class Renderer {
     render() { }
     changeMenu(menu) {
         switch (menu) {
-            case 'main':
+            case 'main': {
                 this.mainButtons.classList.remove('hidden');
                 this.moveButtons.classList.add('hidden');
                 this.switchButtons.classList.add('hidden');
                 break;
-            case 'move':
+            }
+            case 'move': {
+                const moves = this.engine.playerActivePokemon.moves;
+                this.move1Button.textContent = `${moves[0].name} ${moves[0].pp}/${moves[0].maxPP}`;
+                this.move2Button.textContent = `${moves[1].name} ${moves[1].pp}/${moves[1].maxPP}`;
+                this.move3Button.textContent = `${moves[2].name} ${moves[2].pp}/${moves[2].maxPP}`;
+                this.move4Button.textContent = `${moves[3].name} ${moves[3].pp}/${moves[3].maxPP}`;
                 this.mainButtons.classList.add('hidden');
                 this.moveButtons.classList.remove('hidden');
                 this.switchButtons.classList.add('hidden');
                 break;
-            case 'switch':
+            }
+            case 'switch': {
+                const pokemons = this.engine.playerTeam;
+                this.switch1Button.textContent = `${pokemons[0].name} ${pokemons[0].hp}/${pokemons[0].baseHP}`;
+                this.switch2Button.textContent = `${pokemons[1].name} ${pokemons[1].hp}/${pokemons[1].baseHP}`;
+                this.switch3Button.textContent = `${pokemons[2].name} ${pokemons[2].hp}/${pokemons[2].baseHP}`;
+                this.switch4Button.textContent = `${pokemons[3].name} ${pokemons[3].hp}/${pokemons[3].baseHP}`;
                 this.mainButtons.classList.add('hidden');
                 this.moveButtons.classList.add('hidden');
                 this.switchButtons.classList.remove('hidden');
                 break;
+            }
         }
     }
     log() {

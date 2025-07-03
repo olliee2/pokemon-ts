@@ -7,6 +7,7 @@ export class Move {
   public power: number;
   public accuracy: number;
   public pp: number;
+  public maxPP: number;
   public effect?: {
     condition: Condition;
     affects: 'self' | 'target';
@@ -38,6 +39,7 @@ export class Move {
     this.power = params.power ?? 0;
     this.accuracy = params.accuracy ?? 1;
     this.pp = params.pp;
+    this.maxPP = params.pp;
     this.effect = params.effect
       ? {
           ...params.effect,
