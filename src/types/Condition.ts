@@ -1,0 +1,16 @@
+export type Condition =
+  | 'attack'
+  | 'defense'
+  | 'special'
+  | 'speed'
+  | 'accuracy'
+  | 'evasion'
+  | 'burn'
+  | 'freeze'
+  | 'paralysis'
+  | 'poison'
+  | 'badlypoisoned'
+  | 'sleep'
+  | 'flinch'
+  | 'drain'
+  | 'recoil';

@@ -11,4 +11,4 @@ export class Move {
         this.critRatio = params.critRatio;
     }
 }
-//# sourceMappingURL=MoveData.js.map
+//# sourceMappingURL=Move.js.map

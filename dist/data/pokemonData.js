@@ -7,7 +7,7 @@ export const pokemonData = {
         defense: 245,
         special: 265,
         speed: 233,
-        moves: ['Tackle', 'Vine Whip', 'Razor Leaf', 'Solar Beam'],
+        moves: ['Razor Leaf', 'Sleep Powder', 'Swords Dance', 'Earthquake'],
     },
     6: {
         name: 'Charizard',
@@ -17,7 +17,7 @@ export const pokemonData = {
         defense: 237,
         special: 235,
         speed: 253,
-        moves: ['Scratch', 'Ember', 'Flamethrower', 'Fly'],
+        moves: ['Fire Blast', 'Earthquake', 'Body Slam', 'Swords Dance'],
     },
     9: {
         name: 'Blastoise',
@@ -27,7 +27,7 @@ export const pokemonData = {
         defense: 263,
         special: 235,
         speed: 233,
-        moves: ['Tackle', 'Water Gun', 'Hydro Pump', 'Skull Bash'],
+        moves: ['Surf', 'Blizzard', 'Earthquake', 'Body Slam'],
     },
     12: {
         name: 'Butterfree',
@@ -37,7 +37,7 @@ export const pokemonData = {
         defense: 183,
         special: 223,
         speed: 213,
-        moves: ['Tackle', 'Confusion', 'Gust', 'Psybeam'],
+        moves: ['Psychic', 'Sleep Powder', 'Stun Spore', 'Mega Drain'],
     },
     15: {
         name: 'Beedrill',
@@ -47,7 +47,7 @@ export const pokemonData = {
         defense: 163,
         special: 143,
         speed: 218,
-        moves: ['Fury Attack', 'Twineedle', 'Rage', 'Pin Missile'],
+        moves: ['Twineedle', 'Hyper Beam', 'Double-Edge', 'Agility'],
     },
     18: {
         name: 'Pidgeot',
@@ -57,7 +57,7 @@ export const pokemonData = {
         defense: 203,
         special: 193,
         speed: 236,
-        moves: ['Gust', 'Wing Attack', 'Agility', 'Mirror Move'],
+        moves: ['Double-Edge', 'Hyper Beam', 'Drill Peck', 'Agility'],
     },
     20: {
         name: 'Raticate',
@@ -67,7 +67,7 @@ export const pokemonData = {
         defense: 183,
         special: 173,
         speed: 229,
-        moves: ['Tackle', 'Hyper Fang', 'Super Fang', 'Scary Face'],
+        moves: ['Body Slam', 'Hyper Beam', 'Double-Edge', 'Blizzard'],
     },
     22: {
         name: 'Fearow',
@@ -77,7 +77,7 @@ export const pokemonData = {
         defense: 183,
         special: 179,
         speed: 253,
-        moves: ['Peck', 'Drill Peck', 'Fury Attack', 'Mirror Move'],
+        moves: ['Drill Peck', 'Hyper Beam', 'Double-Edge', 'Mirror Move'],
     },
     24: {
         name: 'Arbok',
@@ -87,7 +87,7 @@ export const pokemonData = {
         defense: 171,
         special: 173,
         speed: 213,
-        moves: ['Bite', 'Glare', 'Acid', 'Screech'],
+        moves: ['Earthquake', 'Glare', 'Rock Slide', 'Hyper Beam'],
     },
     26: {
         name: 'Raichu',
@@ -97,7 +97,7 @@ export const pokemonData = {
         defense: 163,
         special: 223,
         speed: 253,
-        moves: ['Thunder Shock', 'Thunderbolt', 'Quick Attack', 'Thunder'],
+        moves: ['Thunderbolt', 'Surf', 'Thunder Wave', 'Body Slam'],
     },
     28: {
         name: 'Sandslash',
@@ -107,7 +107,7 @@ export const pokemonData = {
         defense: 265,
         special: 163,
         speed: 193,
-        moves: ['Scratch', 'Slash', 'Sand Attack', 'Fury Swipes'],
+        moves: ['Earthquake', 'Rock Slide', 'Swords Dance', 'Hyper Beam'],
     },
     31: {
         name: 'Nidoqueen',
@@ -117,7 +117,7 @@ export const pokemonData = {
         defense: 233,
         special: 193,
         speed: 207,
-        moves: ['Body Slam', 'Earthquake', 'Poison Sting', 'Superpower'],
+        moves: ['Earthquake', 'Blizzard', 'Thunderbolt', 'Body Slam'],
     },
 };
 //# sourceMappingURL=pokemonData.js.map
