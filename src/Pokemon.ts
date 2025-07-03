@@ -1,5 +1,5 @@
 import { PokemonData } from './types/PokemonData';
-import { moveData } from './data/moveData';
+import { moveData } from './data/moveData.js';
 
 export default class Pokemon {
   public name;

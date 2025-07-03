@@ -1,4 +1,4 @@
-import { moveData } from './data/moveData';
+import { moveData } from './data/moveData.js';
 export default class Pokemon {
     constructor(pokemonData) {
         this.name = pokemonData.name;
