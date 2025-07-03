@@ -25,6 +25,38 @@ export default class Renderer {
         this.switch6Button = switch6Button;
         this.switchBackButton = switchBackButton;
         this.battleLog = battleLog;
+        moveButton.addEventListener('click', () => {
+            this.changeMenu('move');
+        });
+        switchButton.addEventListener('click', () => {
+            this.changeMenu('switch');
+        });
+        moveBackButton.addEventListener('click', () => {
+            this.changeMenu('main');
+        });
+        switchBackButton.addEventListener('click', () => {
+            this.changeMenu('main');
+        });
+    }
+    render() { }
+    changeMenu(menu) {
+        switch (menu) {
+            case 'main':
+                this.mainButtons.classList.remove('hidden');
+                this.moveButtons.classList.add('hidden');
+                this.switchButtons.classList.add('hidden');
+                break;
+            case 'move':
+                this.mainButtons.classList.add('hidden');
+                this.moveButtons.classList.remove('hidden');
+                this.switchButtons.classList.add('hidden');
+                break;
+            case 'switch':
+                this.mainButtons.classList.add('hidden');
+                this.moveButtons.classList.add('hidden');
+                this.switchButtons.classList.remove('hidden');
+                break;
+        }
     }
     log() {
         console.log(this.engine, this.playerName, this.playerHP, this.playerImage, this.opponentName, this.opponentHP, this.opponentImage, this.mainButtons, this.moveButton, this.switchButton, this.moveButtons, this.move1Button, this.move2Button, this.move3Button, this.move4Button, this.moveBackButton, this.switchButtons, this.switch1Button, this.switch2Button, this.switch3Button, this.switch4Button, this.switch5Button, this.switch6Button, this.switchBackButton, this.battleLog);

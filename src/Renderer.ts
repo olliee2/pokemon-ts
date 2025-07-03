@@ -1,5 +1,7 @@
 import BattleEngine from './BattleEngine';
 
+type Menu = 'main' | 'move' | 'switch';
+
 export default class Renderer {
   constructor(
     private engine: BattleEngine,
@@ -27,7 +29,42 @@ export default class Renderer {
     private switch6Button: HTMLButtonElement,
     private switchBackButton: HTMLButtonElement,
     private battleLog: HTMLOListElement,
-  ) {}
+  ) {
+    moveButton.addEventListener('click', () => {
+      this.changeMenu('move');
+    });
+    switchButton.addEventListener('click', () => {
+      this.changeMenu('switch');
+    });
+    moveBackButton.addEventListener('click', () => {
+      this.changeMenu('main');
+    });
+    switchBackButton.addEventListener('click', () => {
+      this.changeMenu('main');
+    });
+  }
+
+  render(): void {}
+
+  changeMenu(menu: Menu): void {
+    switch (menu) {
+      case 'main':
+        this.mainButtons.classList.remove('hidden');
+        this.moveButtons.classList.add('hidden');
+        this.switchButtons.classList.add('hidden');
+        break;
+      case 'move':
+        this.mainButtons.classList.add('hidden');
+        this.moveButtons.classList.remove('hidden');
+        this.switchButtons.classList.add('hidden');
+        break;
+      case 'switch':
+        this.mainButtons.classList.add('hidden');
+        this.moveButtons.classList.add('hidden');
+        this.switchButtons.classList.remove('hidden');
+        break;
+    }
+  }
 
   log(): void {
     console.log(

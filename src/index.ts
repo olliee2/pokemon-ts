@@ -95,6 +95,7 @@ const renderer = new Renderer(
   switchBackButton,
   battleLog,
 );
+renderer.render();
 engine.log();
 renderer.log();
 console.log('loaded!');
