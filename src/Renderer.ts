@@ -72,6 +72,8 @@ export default class Renderer {
         this.switch2Button.textContent = `${pokemons[1].name} ${pokemons[1].hp}/${pokemons[1].baseHP}`;
         this.switch3Button.textContent = `${pokemons[2].name} ${pokemons[2].hp}/${pokemons[2].baseHP}`;
         this.switch4Button.textContent = `${pokemons[3].name} ${pokemons[3].hp}/${pokemons[3].baseHP}`;
+        this.switch5Button.textContent = `${pokemons[4].name} ${pokemons[4].hp}/${pokemons[4].baseHP}`;
+        this.switch6Button.textContent = `${pokemons[5].name} ${pokemons[5].hp}/${pokemons[5].baseHP}`;
 
         this.mainButtons.classList.add('hidden');
         this.moveButtons.classList.add('hidden');
