@@ -27,19 +27,22 @@ export default class Renderer {
         this.switch6Button = switch6Button;
         this.switchBackButton = switchBackButton;
         this.battleLog = battleLog;
-        moveButton.addEventListener('click', () => {
+        this.setupEventListeners();
+        this.render();
+    }
+    setupEventListeners() {
+        this.moveButton.addEventListener('click', () => {
             this.changeMenu('move');
         });
-        switchButton.addEventListener('click', () => {
+        this.switchButton.addEventListener('click', () => {
             this.changeMenu('switch');
         });
-        moveBackButton.addEventListener('click', () => {
+        this.moveBackButton.addEventListener('click', () => {
             this.changeMenu('main');
         });
-        switchBackButton.addEventListener('click', () => {
+        this.switchBackButton.addEventListener('click', () => {
             this.changeMenu('main');
         });
-        this.render();
     }
     render() {
         this.changePokemon();
@@ -88,7 +91,7 @@ export default class Renderer {
         this.opponentName.textContent = opponentPokemon.name;
         this.opponentHP.textContent = `HP: ${opponentPokemon.hp}/${opponentPokemon.baseHP}`;
         this.opponentHPBar.value = opponentPokemon.hp / opponentPokemon.baseHP;
-        this.opponentImage.src = `assets/back/${opponentPokemon.name}.png`;
+        this.opponentImage.src = `assets/front/${opponentPokemon.name}.png`;
     }
     log() {
         console.log(this.engine, this.playerName, this.playerHP, this.playerHPBar, this.playerImage, this.opponentName, this.opponentHP, this.opponentHPBar, this.opponentImage, this.mainButtons, this.moveButton, this.switchButton, this.moveButtons, this.move1Button, this.move2Button, this.move3Button, this.move4Button, this.moveBackButton, this.switchButtons, this.switch1Button, this.switch2Button, this.switch3Button, this.switch4Button, this.switch5Button, this.switch6Button, this.switchBackButton, this.battleLog);

@@ -15,16 +15,18 @@
 <p>The Pokémon battler all written in typescript!</p>
 <main id="main">
     <div id="player-container">
-        <p id="player-name">Venusaur</p>
-        <label for="player-hp-bar" id="player-hp">HP: 0/0</label>
+        <p id="player-name"></p>
+        <label for="player-hp-bar" id="player-hp">HP:</label>
         <progress id="player-hp-bar" max="1" value="1"></progress>
-        <img alt="Player Pokémon" id="player-image" src="assets/back/Venusaur.png">
+        <!--suppress RequiredAttributes -->
+        <img alt="Player Pokémon" id="player-image">
     </div>
     <div id="opponent-pokemon-container">
-        <p id="opponent-name">Charizard</p>
-        <label for="opponent-hp-bar" id="opponent-hp">HP: 0/0</label>
+        <p id="opponent-name"></p>
+        <label for="opponent-hp-bar" id="opponent-hp">HP:</label>
         <progress id="opponent-hp-bar" max="1" value="1"></progress>
-        <img alt="Opponent Pokémon" id="opponent-image" src="assets/front/Charizard.png">
+        <!--suppress RequiredAttributes -->
+        <img alt="Opponent Pokémon" id="opponent-image">
     </div>
     <div id="main-buttons">
         <button id="move-button">Battle</button>

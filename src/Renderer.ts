@@ -32,20 +32,23 @@ export default class Renderer {
     private switchBackButton: HTMLButtonElement,
     private battleLog: HTMLOListElement,
   ) {
-    moveButton.addEventListener('click', () => {
+    this.setupEventListeners();
+    this.render();
+  }
+
+  setupEventListeners(): void {
+    this.moveButton.addEventListener('click', () => {
       this.changeMenu('move');
     });
-    switchButton.addEventListener('click', () => {
+    this.switchButton.addEventListener('click', () => {
       this.changeMenu('switch');
     });
-    moveBackButton.addEventListener('click', () => {
+    this.moveBackButton.addEventListener('click', () => {
       this.changeMenu('main');
     });
-    switchBackButton.addEventListener('click', () => {
+    this.switchBackButton.addEventListener('click', () => {
       this.changeMenu('main');
     });
-
-    this.render();
   }
 
   render(): void {
@@ -100,7 +103,7 @@ export default class Renderer {
     this.opponentName.textContent = opponentPokemon.name;
     this.opponentHP.textContent = `HP: ${opponentPokemon.hp}/${opponentPokemon.baseHP}`;
     this.opponentHPBar.value = opponentPokemon.hp / opponentPokemon.baseHP;
-    this.opponentImage.src = `assets/back/${opponentPokemon.name}.png`;
+    this.opponentImage.src = `assets/front/${opponentPokemon.name}.png`;
   }
 
   log(): void {
