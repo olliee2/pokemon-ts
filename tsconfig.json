@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
-    "outDir": "dist",
-    "sourceMap": true,
-    "target": "ES6",
-    "noImplicitAny": true,
+    "target": "ES2017",
+    "module": "ES6",
+    "lib": ["ES2017", "DOM"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
     "noImplicitReturns": true,
-    "strict": true
-  }
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "sourceMap": true
+  },
+  "include": ["src"]
 }

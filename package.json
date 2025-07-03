@@ -15,9 +15,12 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "tsc && http-server"
   },
   "devDependencies": {
+    "http-server": "^14.1.1",
     "tsc": "^2.0.4",
     "typescript": "^5.8.3"
   }
