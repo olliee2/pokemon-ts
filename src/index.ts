@@ -1,5 +1,5 @@
-import BattleEngine from './BattleEngine.js';
 import { pokemonData } from './data/pokemonData.js';
+import BattleEngine from './BattleEngine.js';
 import Renderer from './Renderer.js';
 
 const playerName = document.getElementById('player-name')!;

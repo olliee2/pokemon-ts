@@ -1,10 +1,14 @@
 import { PokemonData } from './types/PokemonData';
+import Pokemon from './Pokemon';
 
 export default class BattleEngine {
-  constructor(
-    private playerTeam: PokemonData[],
-    private opponentTeam: PokemonData[],
-  ) {}
+  private playerTeam: Pokemon[];
+  private opponentTeam: Pokemon[];
+
+  constructor(playerTeamData: PokemonData[], opponentTeamData: PokemonData[]) {
+    this.playerTeam = playerTeamData.map((data) => new Pokemon(data));
+    this.opponentTeam = opponentTeamData.map((data) => new Pokemon(data));
+  }
 
   log(): void {
     console.log(this.playerTeam, this.opponentTeam);

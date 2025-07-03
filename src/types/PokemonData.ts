@@ -5,6 +5,7 @@ export interface PokemonData {
   hp: number;
   attack: number;
   defense: number;
+  special: number;
   speed: number;
   moves: string[];
 }
