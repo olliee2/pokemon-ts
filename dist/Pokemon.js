@@ -1,3 +1,4 @@
+import { moveData } from './data/moveData';
 export default class Pokemon {
     constructor(pokemonData) {
         this.name = pokemonData.name;
@@ -7,7 +8,7 @@ export default class Pokemon {
         this.baseDefense = pokemonData.defense;
         this.baseSpecial = pokemonData.special;
         this.baseSpeed = pokemonData.speed;
-        this.moves = pokemonData.moves;
+        this.moves = pokemonData.moves.map((move) => moveData[move]);
         this.hp = this.baseHP;
         this.attack = this.baseAttack;
         this.defense = this.baseDefense;
