@@ -1,7 +1,7 @@
 {
   "name": "pokemon-ts",
   "version": "1.0.0",
-  "description": "NOTE: Requires TS Now where was that pesky TS installation instructions whoopsie the form requires some information to be filled out.",
+  "description": "Implementation of a pokemon battle system in TypeScript.",
   "homepage": "https://github.com/olliee2/pokemon-ts#readme",
   "bugs": {
     "url": "https://github.com/olliee2/pokemon-ts/issues"
