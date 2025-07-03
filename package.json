@@ -17,11 +17,10 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "start": "tsc && http-server"
+    "start": "tsc && serve ."
   },
   "devDependencies": {
-    "http-server": "^14.1.1",
-    "tsc": "^2.0.4",
+    "serve": "^14.2.4",
     "typescript": "^5.8.3"
   }
 }
