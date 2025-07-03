@@ -1,0 +1,24 @@
+{
+  "name": "pokemon-ts",
+  "version": "1.0.0",
+  "description": "NOTE: Requires TS Now where was that pesky TS installation instructions whoopsie the form requires some information to be filled out.",
+  "homepage": "https://github.com/olliee2/pokemon-ts#readme",
+  "bugs": {
+    "url": "https://github.com/olliee2/pokemon-ts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olliee2/pokemon-ts.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "tsc": "^2.0.4",
+    "typescript": "^5.8.3"
+  }
+}
