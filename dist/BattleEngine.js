@@ -90,7 +90,13 @@ export default class BattleEngine {
     useMove(attackingPokemon, defendingPokemon, move) {
         if (move === undefined)
             return;
+        this.synchronizeStats();
         Logger.log(`${attackingPokemon.name} used ${move.name} on ${defendingPokemon.name}!`);
+        const hitChance = (move.accuracy * attackingPokemon.accuracy) / defendingPokemon.evasion;
+        if (Math.random() > hitChance) {
+            Logger.log('But it missed!');
+            return;
+        }
         const attack = move.category === 'physical'
             ? attackingPokemon.attack
             : attackingPokemon.special;
@@ -110,19 +116,19 @@ export default class BattleEngine {
         }
         switch (typeEffectiveness) {
             case 4:
-                Logger.log('It\'s extremely effective!');
+                Logger.log(`It's extremely effective!`);
                 break;
             case 2:
-                Logger.log('It\'s super effective!');
+                Logger.log(`It's super effective!`);
                 break;
             case 0.5:
-                Logger.log('It\'s not very effective...');
+                Logger.log(`It's not very effective...`);
                 break;
             case 0.25:
-                Logger.log('It\'s barely effective...');
+                Logger.log(`It's barely effective...`);
                 break;
             case 0:
-                Logger.log('It had no effect');
+                Logger.log(`It had no effect`);
                 break;
         }
         modifier *= typeEffectiveness;
@@ -231,6 +237,7 @@ export default class BattleEngine {
                 }
             }
         }
+        this.synchronizeStats();
     }
     selectOpponentPokemon() {
         const opponentValidPokemon = this.opponentTeam.filter((pokemon) => pokemon.hp >= 0);
@@ -241,6 +248,33 @@ export default class BattleEngine {
         return opponentPokemonIndex >= 0
             ? this.opponentTeam[opponentPokemonIndex]
             : this.opponentTeam[0];
+    }
+    synchronizeStats() {
+        const stageMultiplier = [
+            1 / 3,
+            3 / 8,
+            3 / 7,
+            0.5,
+            3 / 5,
+            3 / 4,
+            1,
+            4 / 3,
+            5 / 3,
+            2,
+            7 / 3,
+            8 / 3,
+            3,
+        ];
+        // Index 0 = -6, ..., Index 6 = 0, ..., Index 12 = +6
+        [this.playerActivePokemon, this.opponentActivePokemon].forEach((pokemon) => {
+            const getStage = (stage) => stageMultiplier[stage + 6];
+            pokemon.attack = Math.floor(pokemon.baseAttack * getStage(pokemon.attackStage));
+            pokemon.defense = Math.floor(pokemon.baseDefense * getStage(pokemon.defenseStage));
+            pokemon.special = Math.floor(pokemon.baseSpecial * getStage(pokemon.specialStage));
+            pokemon.speed = Math.floor(pokemon.baseSpeed * getStage(pokemon.speedStage));
+            pokemon.accuracy = getStage(pokemon.accuracyStage);
+            pokemon.evasion = getStage(pokemon.evasionStage);
+        });
     }
 }
 //# sourceMappingURL=BattleEngine.js.map

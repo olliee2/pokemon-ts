@@ -52,8 +52,4 @@ export default class Pokemon {
     this.special = this.baseSpecial;
     this.speed = this.baseSpeed;
   }
-
-  log(): void {
-    console.log(this);
-  }
 }

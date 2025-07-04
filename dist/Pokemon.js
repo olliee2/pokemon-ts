@@ -30,8 +30,5 @@ export default class Pokemon {
         this.special = this.baseSpecial;
         this.speed = this.baseSpeed;
     }
-    log() {
-        console.log(this);
-    }
 }
 //# sourceMappingURL=Pokemon.js.map
