@@ -14,3 +14,4 @@ npm-debug.log*# Misc files
 .DS_Store       # Macs often create this file
 notes.md        # Personal project notes, not my reference.
 .idea/
+*.zip
