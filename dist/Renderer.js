@@ -1,3 +1,4 @@
+import Logger from './Logger';
 export default class Renderer {
     constructor(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton) {
         this.engine = engine;
@@ -166,9 +167,13 @@ export default class Renderer {
         if (selectedPokemon.hp > 0 &&
             selectedPokemon !== this.engine.playerActivePokemon) {
             this.engine.playerActivePokemon = selectedPokemon;
+            Logger.log(`You sent out ${selectedPokemon.name}!`);
             const result = this.engine.selectMove(undefined);
             this.handleResult(result);
             this.render();
+        }
+        else {
+            Logger.log(`${selectedPokemon.name} is invalid to send out.`);
         }
     }
 }
