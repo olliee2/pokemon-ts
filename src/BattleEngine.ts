@@ -26,16 +26,13 @@ export default class BattleEngine {
       playerMoveIndex >= 0
         ? this.playerActivePokemon.moves[playerMoveIndex]
         : structuredClone(moveData.Struggle);
-
     const opponentMove = this.selectOpponentMove();
-
     const firstPlayer = this.calculateFirstPlayer(
       this.playerActivePokemon,
       playerMove,
       this.opponentActivePokemon,
       opponentMove,
     );
-
     const [firstPokemon, secondPokemon, firstMove, secondMove] =
       firstPlayer === 'player'
         ? [
@@ -51,37 +48,31 @@ export default class BattleEngine {
             playerMove,
           ];
 
-    this.useMove(firstPokemon, secondPokemon, firstMove);
-
-    if (this.opponentActivePokemon.hp <= 0) {
-      this.opponentActivePokemon = this.selectOpponentPokemon();
+    // Helper to check win/lose/switch after a move
+    const checkBattleState = ():
+      | 'Pokemon Select'
+      | 'Player Win'
+      | 'Opponent Win'
+      | undefined => {
       if (this.opponentActivePokemon.hp <= 0) {
-        return 'Player Win';
+        this.opponentActivePokemon = this.selectOpponentPokemon();
+        if (this.opponentActivePokemon.hp <= 0) return 'Player Win';
+        return undefined;
+      }
+      if (this.playerActivePokemon.hp <= 0) {
+        if (this.playerTeam.some((pokemon) => pokemon.hp))
+          return 'Pokemon Select';
+        return 'Opponent Win';
       }
       return undefined;
-    } else if (this.playerActivePokemon.hp <= 0) {
-      if (this.playerTeam.some((pokemon) => pokemon.hp)) {
-        return 'Pokemon Select';
-      }
-      return 'Opponent Win';
-    }
+    };
+
+    this.useMove(firstPokemon, secondPokemon, firstMove);
+    const result = checkBattleState();
+    if (result) return result;
 
     this.useMove(secondPokemon, firstPokemon, secondMove);
-
-    if (this.opponentActivePokemon.hp <= 0) {
-      this.opponentActivePokemon = this.selectOpponentPokemon();
-      if (this.opponentActivePokemon.hp <= 0) {
-        return 'Player Win';
-      }
-      return undefined;
-    } else if (this.playerActivePokemon.hp <= 0) {
-      if (this.playerTeam.some((pokemon) => pokemon.hp)) {
-        return 'Pokemon Select';
-      }
-      return 'Opponent Win';
-    }
-
-    return undefined;
+    return checkBattleState();
   }
 
   log(): void {
@@ -156,9 +147,10 @@ export default class BattleEngine {
       modifier *= 2;
     }
 
-    const damage =
+    const damage = Math.floor(
       ((((2 * 100) / 5 + 2) * move.power * attack) / defense / 50 + 2) *
-      modifier;
+        modifier,
+    );
 
     defendingPokemon.hp = Math.max(0, defendingPokemon.hp - damage);
 

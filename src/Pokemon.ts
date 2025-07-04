@@ -54,15 +54,6 @@ export default class Pokemon {
   }
 
   log(): void {
-    console.log(
-      this.name,
-      this.types,
-      this.baseHP,
-      this.baseAttack,
-      this.baseDefense,
-      this.baseSpeed,
-      this.baseSpecial,
-      this.moves,
-    );
+    console.log(this);
   }
 }

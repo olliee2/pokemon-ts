@@ -55,41 +55,63 @@ export default class Renderer {
         this.move4Button.addEventListener('click', () => {
             this.useMove(3);
         });
+        this.switch1Button.addEventListener('click', () => {
+            this.switchPokemon(0);
+        });
+        this.switch2Button.addEventListener('click', () => {
+            this.switchPokemon(1);
+        });
+        this.switch3Button.addEventListener('click', () => {
+            this.switchPokemon(2);
+        });
+        this.switch4Button.addEventListener('click', () => {
+            this.switchPokemon(3);
+        });
+        this.switch5Button.addEventListener('click', () => {
+            this.switchPokemon(4);
+        });
+        this.switch6Button.addEventListener('click', () => {
+            this.switchPokemon(5);
+        });
     }
     render() {
         this.changePokemon();
     }
     changeMenu(menu) {
-        switch (menu) {
-            case 'main': {
-                this.mainButtons.classList.remove('hidden');
-                this.moveButtons.classList.add('hidden');
-                this.switchButtons.classList.add('hidden');
-                break;
-            }
-            case 'move': {
-                const moves = this.engine.playerActivePokemon.moves;
-                this.move1Button.textContent = `${moves[0].name} ${moves[0].pp}/${moves[0].maxPP}`;
-                this.move2Button.textContent = `${moves[1].name} ${moves[1].pp}/${moves[1].maxPP}`;
-                this.move3Button.textContent = `${moves[2].name} ${moves[2].pp}/${moves[2].maxPP}`;
-                this.move4Button.textContent = `${moves[3].name} ${moves[3].pp}/${moves[3].maxPP}`;
-                this.mainButtons.classList.add('hidden');
-                this.moveButtons.classList.remove('hidden');
-                this.switchButtons.classList.add('hidden');
-                break;
-            }
-            case 'switch': {
-                const pokemons = this.engine.playerTeam;
-                this.switch1Button.textContent = `${pokemons[0].name} ${pokemons[0].hp}/${pokemons[0].baseHP}`;
-                this.switch2Button.textContent = `${pokemons[1].name} ${pokemons[1].hp}/${pokemons[1].baseHP}`;
-                this.switch3Button.textContent = `${pokemons[2].name} ${pokemons[2].hp}/${pokemons[2].baseHP}`;
-                this.switch4Button.textContent = `${pokemons[3].name} ${pokemons[3].hp}/${pokemons[3].baseHP}`;
-                this.switch5Button.textContent = `${pokemons[4].name} ${pokemons[4].hp}/${pokemons[4].baseHP}`;
-                this.switch6Button.textContent = `${pokemons[5].name} ${pokemons[5].hp}/${pokemons[5].baseHP}`;
-                this.mainButtons.classList.add('hidden');
-                this.moveButtons.classList.add('hidden');
-                this.switchButtons.classList.remove('hidden');
-                break;
+        this.mainButtons.classList.add('hidden');
+        this.moveButtons.classList.add('hidden');
+        this.switchButtons.classList.add('hidden');
+        this.switchBackButton.classList.remove('hidden');
+        if (menu === 'main') {
+            this.mainButtons.classList.remove('hidden');
+        }
+        else if (menu === 'move') {
+            const moves = this.engine.playerActivePokemon.moves;
+            [
+                this.move1Button,
+                this.move2Button,
+                this.move3Button,
+                this.move4Button,
+            ].forEach((btn, i) => {
+                btn.textContent = `${moves[i].name} ${moves[i].pp}/${moves[i].maxPP}`;
+            });
+            this.moveButtons.classList.remove('hidden');
+        }
+        else if (menu === 'forcedSwitch' || menu === 'switch') {
+            const pokemons = this.engine.playerTeam;
+            [
+                this.switch1Button,
+                this.switch2Button,
+                this.switch3Button,
+                this.switch4Button,
+                this.switch5Button,
+                this.switch6Button,
+            ].forEach((btn, i) => {
+                btn.textContent = `${pokemons[i].name} ${pokemons[i].hp}/${pokemons[i].baseHP}`;
+            });
+            this.switchButtons.classList.remove('hidden');
+            if (menu === 'forcedSwitch') {
+                this.switchBackButton.classList.add('hidden');
             }
         }
     }
@@ -115,6 +137,7 @@ export default class Renderer {
                     : undefined;
             if (moveToUse !== undefined) {
                 const result = this.engine.selectMove(moveToUse);
+                console.log('Result:', result);
                 switch (result) {
                     case 'Pokemon Select': {
                         this.changeMenu('forcedSwitch');
@@ -130,15 +153,23 @@ export default class Renderer {
                     }
                     default: {
                         this.changeMenu('main');
+                        break;
                     }
                 }
-                this.changeMenu('main');
                 this.render();
             }
         }
     }
     log() {
         console.log(this.engine, this.playerName, this.playerHP, this.playerHPBar, this.playerImage, this.opponentName, this.opponentHP, this.opponentHPBar, this.opponentImage, this.mainButtons, this.moveButton, this.switchButton, this.moveButtons, this.move1Button, this.move2Button, this.move3Button, this.move4Button, this.moveBackButton, this.switchButtons, this.switch1Button, this.switch2Button, this.switch3Button, this.switch4Button, this.switch5Button, this.switch6Button, this.switchBackButton, this.battleLog);
+    }
+    switchPokemon(pokemonIndex) {
+        const selectedPokemon = this.engine.playerTeam[pokemonIndex];
+        if (selectedPokemon.hp > 0 &&
+            selectedPokemon !== this.engine.playerActivePokemon) {
+            this.engine.playerActivePokemon = selectedPokemon;
+        }
+        this.render();
     }
 }
 //# sourceMappingURL=Renderer.js.map

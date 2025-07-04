@@ -2,7 +2,7 @@ import { Move } from '../Move.js';
 export const moveData = {
     'Razor Leaf': new Move({
         name: 'Razor Leaf',
-        type: 'Grass',
+        type: 'grass',
         category: 'physical',
         power: 55,
         accuracy: 95,
@@ -11,28 +11,28 @@ export const moveData = {
     }),
     'Sleep Powder': new Move({
         name: 'Sleep Powder',
-        type: 'Grass',
+        type: 'grass',
         category: 'status',
         pp: 15,
         effect: { condition: 'sleep', affects: 'target' },
     }),
     'Swords Dance': new Move({
         name: 'Swords Dance',
-        type: 'Normal',
+        type: 'normal',
         category: 'status',
         pp: 20,
         effect: { condition: 'attack', affects: 'self', strength: 2 },
     }),
     Earthquake: new Move({
         name: 'Earthquake',
-        type: 'Ground',
+        type: 'ground',
         category: 'physical',
         power: 100,
         pp: 10,
     }),
     'Fire Blast': new Move({
         name: 'Fire Blast',
-        type: 'Fire',
+        type: 'fire',
         category: 'special',
         power: 120,
         accuracy: 85,
@@ -41,7 +41,7 @@ export const moveData = {
     }),
     'Body Slam': new Move({
         name: 'Body Slam',
-        type: 'Normal',
+        type: 'normal',
         category: 'physical',
         power: 85,
         pp: 15,
@@ -49,14 +49,14 @@ export const moveData = {
     }),
     Surf: new Move({
         name: 'Surf',
-        type: 'Water',
+        type: 'water',
         category: 'special',
         power: 95,
         pp: 15,
     }),
     Blizzard: new Move({
         name: 'Blizzard',
-        type: 'Ice',
+        type: 'ice',
         category: 'special',
         power: 120,
         accuracy: 0.9,
@@ -65,7 +65,7 @@ export const moveData = {
     }),
     Psychic: new Move({
         name: 'Psychic',
-        type: 'Psychic',
+        type: 'psychic',
         category: 'special',
         power: 90,
         pp: 10,
@@ -73,7 +73,7 @@ export const moveData = {
     }),
     'Stun Spore': new Move({
         name: 'Stun Spore',
-        type: 'Grass',
+        type: 'grass',
         category: 'status',
         accuracy: 75,
         pp: 30,
@@ -81,7 +81,7 @@ export const moveData = {
     }),
     'Mega Drain': new Move({
         name: 'Mega Drain',
-        type: 'Grass',
+        type: 'grass',
         category: 'special',
         power: 40,
         pp: 10,
@@ -89,7 +89,7 @@ export const moveData = {
     }),
     Twineedle: new Move({
         name: 'Twineedle',
-        type: 'Bug',
+        type: 'bug',
         category: 'physical',
         power: 25,
         pp: 20,
@@ -97,7 +97,7 @@ export const moveData = {
     }),
     'Hyper Beam': new Move({
         name: 'Hyper Beam',
-        type: 'Normal',
+        type: 'normal',
         category: 'physical',
         power: 150,
         accuracy: 90,
@@ -105,7 +105,7 @@ export const moveData = {
     }),
     'Double-Edge': new Move({
         name: 'Double-Edge',
-        type: 'Normal',
+        type: 'normal',
         category: 'physical',
         power: 100,
         pp: 15,
@@ -113,21 +113,21 @@ export const moveData = {
     }),
     Agility: new Move({
         name: 'Agility',
-        type: 'Psychic',
+        type: 'psychic',
         category: 'status',
         pp: 30,
         effect: { condition: 'speed', affects: 'self', strength: 2 },
     }),
     'Drill Peck': new Move({
         name: 'Drill Peck',
-        type: 'Flying',
+        type: 'flying',
         category: 'physical',
         power: 80,
         pp: 20,
     }),
     'Rock Slide': new Move({
         name: 'Rock Slide',
-        type: 'Rock',
+        type: 'rock',
         category: 'physical',
         power: 75,
         accuracy: 90,
@@ -136,7 +136,7 @@ export const moveData = {
     }),
     Thunderbolt: new Move({
         name: 'Thunderbolt',
-        type: 'Electric',
+        type: 'electric',
         category: 'special',
         power: 95,
         pp: 15,
@@ -144,14 +144,14 @@ export const moveData = {
     }),
     'Thunder Wave': new Move({
         name: 'Thunder Wave',
-        type: 'Electric',
+        type: 'electric',
         category: 'status',
         pp: 20,
         effect: { condition: 'paralysis', affects: 'target' },
     }),
     Struggle: new Move({
         name: 'Struggle',
-        type: 'Normal',
+        type: 'normal',
         category: 'physical',
         power: 50,
         pp: 1,

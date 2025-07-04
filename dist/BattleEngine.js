@@ -27,35 +27,27 @@ export default class BattleEngine {
                 opponentMove,
                 playerMove,
             ];
+        // Helper to check win/lose/switch after a move
+        const checkBattleState = () => {
+            if (this.opponentActivePokemon.hp <= 0) {
+                this.opponentActivePokemon = this.selectOpponentPokemon();
+                if (this.opponentActivePokemon.hp <= 0)
+                    return 'Player Win';
+                return undefined;
+            }
+            if (this.playerActivePokemon.hp <= 0) {
+                if (this.playerTeam.some((pokemon) => pokemon.hp))
+                    return 'Pokemon Select';
+                return 'Opponent Win';
+            }
+            return undefined;
+        };
         this.useMove(firstPokemon, secondPokemon, firstMove);
-        if (this.opponentActivePokemon.hp <= 0) {
-            this.opponentActivePokemon = this.selectOpponentPokemon();
-            if (this.opponentActivePokemon.hp <= 0) {
-                return 'Player Win';
-            }
-            return undefined;
-        }
-        else if (this.playerActivePokemon.hp <= 0) {
-            if (this.playerTeam.some((pokemon) => pokemon.hp)) {
-                return 'Pokemon Select';
-            }
-            return 'Opponent Win';
-        }
+        const result = checkBattleState();
+        if (result)
+            return result;
         this.useMove(secondPokemon, firstPokemon, secondMove);
-        if (this.opponentActivePokemon.hp <= 0) {
-            this.opponentActivePokemon = this.selectOpponentPokemon();
-            if (this.opponentActivePokemon.hp <= 0) {
-                return 'Player Win';
-            }
-            return undefined;
-        }
-        else if (this.playerActivePokemon.hp <= 0) {
-            if (this.playerTeam.some((pokemon) => pokemon.hp)) {
-                return 'Pokemon Select';
-            }
-            return 'Opponent Win';
-        }
-        return undefined;
+        return checkBattleState();
     }
     log() {
         console.log(this.playerTeam, this.playerActivePokemon, this.opponentTeam, this.opponentActivePokemon);
@@ -105,8 +97,8 @@ export default class BattleEngine {
         if (Math.random() <= critChance) {
             modifier *= 2;
         }
-        const damage = ((((2 * 100) / 5 + 2) * move.power * attack) / defense / 50 + 2) *
-            modifier;
+        const damage = Math.floor(((((2 * 100) / 5 + 2) * move.power * attack) / defense / 50 + 2) *
+            modifier);
         defendingPokemon.hp = Math.max(0, defendingPokemon.hp - damage);
         if (move.effect && Math.random() <= move.effect.chance) {
             const effect = move.effect;

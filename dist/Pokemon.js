@@ -31,7 +31,7 @@ export default class Pokemon {
         this.speed = this.baseSpeed;
     }
     log() {
-        console.log(this.name, this.types, this.baseHP, this.baseAttack, this.baseDefense, this.baseSpeed, this.baseSpecial, this.moves);
+        console.log(this);
     }
 }
 //# sourceMappingURL=Pokemon.js.map
