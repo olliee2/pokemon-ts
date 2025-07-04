@@ -137,26 +137,28 @@ export default class Renderer {
                     : undefined;
             if (moveToUse !== undefined) {
                 const result = this.engine.selectMove(moveToUse);
-                console.log('Result:', result);
-                switch (result) {
-                    case 'Pokemon Select': {
-                        this.changeMenu('forcedSwitch');
-                        break;
-                    }
-                    case 'Opponent Win': {
-                        setTimeout(() => alert('Opponent Win!'), 100);
-                        break;
-                    }
-                    case 'Player Win': {
-                        setTimeout(() => alert('Player Win!'), 100);
-                        break;
-                    }
-                    default: {
-                        this.changeMenu('main');
-                        break;
-                    }
-                }
+                this.handleResult(result);
                 this.render();
+            }
+        }
+    }
+    handleResult(result) {
+        switch (result) {
+            case 'Pokemon Select': {
+                this.changeMenu('forcedSwitch');
+                break;
+            }
+            case 'Opponent Win': {
+                setTimeout(() => alert('Opponent Win!'), 100);
+                break;
+            }
+            case 'Player Win': {
+                setTimeout(() => alert('Player Win!'), 100);
+                break;
+            }
+            default: {
+                this.changeMenu('main');
+                break;
             }
         }
     }
@@ -168,8 +170,27 @@ export default class Renderer {
         if (selectedPokemon.hp > 0 &&
             selectedPokemon !== this.engine.playerActivePokemon) {
             this.engine.playerActivePokemon = selectedPokemon;
+            const result = this.engine.selectMove(undefined);
+            switch (result) {
+                case 'Pokemon Select': {
+                    this.changeMenu('forcedSwitch');
+                    break;
+                }
+                case 'Opponent Win': {
+                    setTimeout(() => alert('Opponent Win!'), 100);
+                    break;
+                }
+                case 'Player Win': {
+                    setTimeout(() => alert('Player Win!'), 100);
+                    break;
+                }
+                default: {
+                    this.changeMenu('main');
+                    break;
+                }
+            }
+            this.render();
         }
-        this.render();
     }
 }
 //# sourceMappingURL=Renderer.js.map

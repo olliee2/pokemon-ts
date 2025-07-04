@@ -1,7 +1,7 @@
 export const pokemonData = {
     3: {
         name: 'Venusaur',
-        types: ['Grass', 'Poison'],
+        types: ['grass', 'poison'],
         hp: 348,
         attack: 242,
         defense: 245,
@@ -11,7 +11,7 @@ export const pokemonData = {
     },
     6: {
         name: 'Charizard',
-        types: ['Fire', 'Flying'],
+        types: ['fire', 'flying'],
         hp: 339,
         attack: 246,
         defense: 237,
@@ -21,7 +21,7 @@ export const pokemonData = {
     },
     9: {
         name: 'Blastoise',
-        types: ['Water'],
+        types: ['water'],
         hp: 341,
         attack: 243,
         defense: 263,
@@ -31,7 +31,7 @@ export const pokemonData = {
     },
     12: {
         name: 'Butterfree',
-        types: ['Bug', 'Flying'],
+        types: ['bug', 'flying'],
         hp: 293,
         attack: 173,
         defense: 183,
@@ -41,7 +41,7 @@ export const pokemonData = {
     },
     15: {
         name: 'Beedrill',
-        types: ['Bug', 'Poison'],
+        types: ['bug', 'poison'],
         hp: 303,
         attack: 225,
         defense: 163,
@@ -51,7 +51,7 @@ export const pokemonData = {
     },
     18: {
         name: 'Pidgeot',
-        types: ['Normal', 'Flying'],
+        types: ['normal', 'flying'],
         hp: 319,
         attack: 221,
         defense: 203,
@@ -61,7 +61,7 @@ export const pokemonData = {
     },
     20: {
         name: 'Raticate',
-        types: ['Normal'],
+        types: ['normal'],
         hp: 263,
         attack: 223,
         defense: 183,
@@ -71,17 +71,17 @@ export const pokemonData = {
     },
     22: {
         name: 'Fearow',
-        types: ['Normal', 'Flying'],
+        types: ['normal', 'flying'],
         hp: 283,
         attack: 225,
         defense: 183,
         special: 179,
         speed: 253,
-        moves: ['Drill Peck', 'Hyper Beam', 'Double-Edge', 'Mirror Move'],
+        moves: ['Drill Peck', 'Hyper Beam', 'Double-Edge', 'Body Slam'],
     },
     24: {
         name: 'Arbok',
-        types: ['Poison'],
+        types: ['poison'],
         hp: 273,
         attack: 205,
         defense: 171,
@@ -91,7 +91,7 @@ export const pokemonData = {
     },
     26: {
         name: 'Raichu',
-        types: ['Electric'],
+        types: ['electric'],
         hp: 273,
         attack: 225,
         defense: 163,
@@ -101,7 +101,7 @@ export const pokemonData = {
     },
     28: {
         name: 'Sandslash',
-        types: ['Ground'],
+        types: ['ground'],
         hp: 313,
         attack: 245,
         defense: 265,
@@ -111,7 +111,7 @@ export const pokemonData = {
     },
     31: {
         name: 'Nidoqueen',
-        types: ['Poison', 'Ground'],
+        types: ['poison', 'ground'],
         hp: 353,
         attack: 221,
         defense: 233,

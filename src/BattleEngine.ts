@@ -20,12 +20,14 @@ export default class BattleEngine {
   }
 
   selectMove(
-    playerMoveIndex: number,
+    playerMoveIndex: number | undefined,
   ): 'Pokemon Select' | 'Player Win' | 'Opponent Win' | undefined {
     const playerMove =
-      playerMoveIndex >= 0
-        ? this.playerActivePokemon.moves[playerMoveIndex]
-        : structuredClone(moveData.Struggle);
+      playerMoveIndex === undefined
+        ? undefined
+        : playerMoveIndex >= 0
+          ? this.playerActivePokemon.moves[playerMoveIndex]
+          : structuredClone(moveData.Struggle);
     const opponentMove = this.selectOpponentMove();
     const firstPlayer = this.calculateFirstPlayer(
       this.playerActivePokemon,
@@ -99,10 +101,11 @@ export default class BattleEngine {
 
   private calculateFirstPlayer(
     playerActivePokemon: Pokemon,
-    playerMove: Move,
+    playerMove: Move | undefined,
     opponentActivePokemon: Pokemon,
     opponentMove: Move,
   ): Player {
+    if (playerMove === undefined) return 'opponent';
     if (playerMove.priority > opponentMove.priority) return 'player';
     if (playerMove.priority < opponentMove.priority) return 'opponent';
     if (playerActivePokemon.speed > opponentActivePokemon.speed)
@@ -117,8 +120,9 @@ export default class BattleEngine {
   private useMove(
     attackingPokemon: Pokemon,
     defendingPokemon: Pokemon,
-    move: Move,
+    move: Move | undefined,
   ): void {
+    if (move === undefined) return;
     const attack =
       move.category === 'physical'
         ? attackingPokemon.attack

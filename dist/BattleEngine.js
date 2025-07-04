@@ -9,9 +9,11 @@ export default class BattleEngine {
         this.opponentActivePokemon = this.opponentTeam[0];
     }
     selectMove(playerMoveIndex) {
-        const playerMove = playerMoveIndex >= 0
-            ? this.playerActivePokemon.moves[playerMoveIndex]
-            : structuredClone(moveData.Struggle);
+        const playerMove = playerMoveIndex === undefined
+            ? undefined
+            : playerMoveIndex >= 0
+                ? this.playerActivePokemon.moves[playerMoveIndex]
+                : structuredClone(moveData.Struggle);
         const opponentMove = this.selectOpponentMove();
         const firstPlayer = this.calculateFirstPlayer(this.playerActivePokemon, playerMove, this.opponentActivePokemon, opponentMove);
         const [firstPokemon, secondPokemon, firstMove, secondMove] = firstPlayer === 'player'
@@ -63,6 +65,8 @@ export default class BattleEngine {
             : structuredClone(moveData.Struggle);
     }
     calculateFirstPlayer(playerActivePokemon, playerMove, opponentActivePokemon, opponentMove) {
+        if (playerMove === undefined)
+            return 'opponent';
         if (playerMove.priority > opponentMove.priority)
             return 'player';
         if (playerMove.priority < opponentMove.priority)
@@ -76,6 +80,8 @@ export default class BattleEngine {
         return 'opponent';
     }
     useMove(attackingPokemon, defendingPokemon, move) {
+        if (move === undefined)
+            return;
         const attack = move.category === 'physical'
             ? attackingPokemon.attack
             : attackingPokemon.special;
