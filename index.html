@@ -14,19 +14,21 @@
 <h1>Pokémon TS</h1>
 <p>The Pokémon battler all written in typescript!</p>
 <main id="main">
-    <div id="player-container">
-        <p id="player-name"></p>
-        <label for="player-hp-bar" id="player-hp">HP:</label>
-        <progress id="player-hp-bar" max="1" value="1"></progress>
-        <!--suppress RequiredAttributes -->
-        <img alt="Player Pokémon" id="player-image">
-    </div>
-    <div id="opponent-pokemon-container">
-        <p id="opponent-name"></p>
-        <label for="opponent-hp-bar" id="opponent-hp">HP:</label>
-        <progress id="opponent-hp-bar" max="1" value="1"></progress>
-        <!--suppress RequiredAttributes -->
-        <img alt="Opponent Pokémon" id="opponent-image">
+    <div id="pokemon-containers">
+        <div class="pokemon-container" id="player-container">
+            <p class="pokemon-name" id="player-name"></p>
+            <label class="pokemon-hp" for="player-hp-bar" id="player-hp">HP:</label>
+            <progress class="pokemon-hp-bar" id="player-hp-bar" max="1" value="1"></progress>
+            <!--suppress RequiredAttributes -->
+            <img alt="Player Pokémon" class="pokemon-image" id="player-image">
+        </div>
+        <div class="pokemon-container" id="opponent-pokemon-container">
+            <p class="pokemon-name" id="opponent-name"></p>
+            <label class="pokemon-hp" for="opponent-hp-bar" id="opponent-hp">HP:</label>
+            <progress class="pokemon-hp-bar" id="opponent-hp-bar" max="1" value="1"></progress>
+            <!--suppress RequiredAttributes -->
+            <img alt="Opponent Pokémon" class="pokemon-image" id="opponent-image">
+        </div>
     </div>
     <div id="main-buttons">
         <button id="move-button">Battle</button>

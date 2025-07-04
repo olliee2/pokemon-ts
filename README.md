@@ -29,5 +29,7 @@ Contains the compiled JavaScript that is then ran.
 - Sandslash
 - Nidoqueen
 
+More to be added later!
+
 hosted on cloudflare pages at
 https://pokemon-ts.pages.dev

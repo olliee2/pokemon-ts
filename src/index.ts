@@ -2,6 +2,7 @@ import { pokemonData } from './data/pokemonData.js';
 import BattleEngine from './BattleEngine.js';
 import Renderer from './Renderer.js';
 import Logger from './Logger.js';
+import { PokemonData } from './types/PokemonData';
 
 const playerName = document.getElementById('player-name')!;
 const playerHP = document.getElementById('player-hp')!;
@@ -66,15 +67,24 @@ const switchBackButton = document.getElementById(
 )! as HTMLButtonElement;
 const battleLog = document.getElementById('battle-log')! as HTMLOListElement;
 
-const allPokemonData = Object.values(pokemonData);
+const allPokemonNames = Object.keys(pokemonData);
+
+function getRandomTeam(): PokemonData[] {
+  const names = [...allPokemonNames];
+  for (let i = names.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [names[i], names[j]] = [names[j], names[i]];
+  }
+  return names.slice(0, 6).map((name) => pokemonData[name]);
+}
+
+const playerTeam = getRandomTeam();
+const opponentTeam = getRandomTeam();
 
 Logger.getInstance(battleLog);
 Logger.log('Loading Game...');
 
-const engine = new BattleEngine(
-  allPokemonData.slice(0, 6), // player team: first 6
-  allPokemonData.slice(6, 12), // opponent team: next 6
-);
+const engine = new BattleEngine(playerTeam, opponentTeam);
 
 const renderer = new Renderer(
   engine,

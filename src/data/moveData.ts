@@ -150,6 +150,13 @@ export const moveData: Record<string, Move> = {
     pp: 20,
     effect: { condition: 'paralysis', affects: 'target' },
   }),
+  Glare: new Move({
+    name: 'Glare',
+    type: 'normal',
+    category: 'status',
+    pp: 30,
+    effect: { condition: 'paralysis', affects: 'target' },
+  }),
   Struggle: new Move({
     name: 'Struggle',
     type: 'normal',

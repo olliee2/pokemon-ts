@@ -10,3 +10,23 @@ body {
 #battle-log {
     list-style: none;
 }
+
+#pokemon-containers {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid yellow;
+}
+
+.pokemon-container {
+    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 25vw;
+}
+
+.pokemon-image {
+    image-rendering: crisp-edges;
+    width: 10vw;
+    aspect-ratio: 1/1;
+}
