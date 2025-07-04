@@ -3,6 +3,7 @@ import Pokemon from './Pokemon.js';
 import { moveData } from './data/moveData.js';
 import { Move } from './Move.js';
 import { typeChart } from './data/typeChart.js';
+import Logger from './Logger';
 
 type Player = 'player' | 'opponent';
 
@@ -77,15 +78,6 @@ export default class BattleEngine {
     return checkBattleState();
   }
 
-  log(): void {
-    console.log(
-      this.playerTeam,
-      this.playerActivePokemon,
-      this.opponentTeam,
-      this.opponentActivePokemon,
-    );
-  }
-
   private selectOpponentMove(): Move {
     const opponentValidMoves = this.opponentActivePokemon.moves.filter(
       (move) => move.pp,
@@ -123,6 +115,9 @@ export default class BattleEngine {
     move: Move | undefined,
   ): void {
     if (move === undefined) return;
+    Logger.log(
+      `${attackingPokemon.name} used ${move.name} on ${defendingPokemon.name}!`,
+    );
     const attack =
       move.category === 'physical'
         ? attackingPokemon.attack
@@ -158,6 +153,8 @@ export default class BattleEngine {
 
     defendingPokemon.hp = Math.max(0, defendingPokemon.hp - damage);
 
+    Logger.log(`${move.name} dealt ${damage} damage!`);
+
     if (move.effect && Math.random() <= move.effect.chance) {
       const effect = move.effect;
       const affectedPokemon =
@@ -178,36 +175,48 @@ export default class BattleEngine {
         );
       }
 
+      function logStatChange(): void {
+        Logger.log(
+          `${affectedPokemon} had their ${effect.condition} ${effect.strength > 0 ? 'increased' : 'decreased'}${Math.abs(effect.strength) >= 2 ? ' sharply' : ''}!`,
+        );
+      }
+
       switch (effect.condition) {
         case 'attack':
           affectedPokemon.attackStage = boundedValue(
             affectedPokemon.attackStage + effect.strength,
           );
+          logStatChange();
           break;
         case 'defense':
           affectedPokemon.defenseStage = boundedValue(
             affectedPokemon.defenseStage + effect.strength,
           );
+          logStatChange();
           break;
         case 'special':
           affectedPokemon.specialStage = boundedValue(
             affectedPokemon.specialStage + effect.strength,
           );
+          logStatChange();
           break;
         case 'speed':
           affectedPokemon.speedStage = boundedValue(
             affectedPokemon.speedStage + effect.strength,
           );
+          logStatChange();
           break;
         case 'accuracy':
           affectedPokemon.accuracyStage = boundedValue(
             affectedPokemon.accuracyStage + effect.strength,
           );
+          logStatChange();
           break;
         case 'evasion':
           affectedPokemon.evasionStage = boundedValue(
             affectedPokemon.evasionStage + effect.strength,
           );
+          logStatChange();
           break;
         case 'burn':
           if (!isAffectedByStatus(affectedPokemon)) {

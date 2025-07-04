@@ -1,6 +1,7 @@
 import { pokemonData } from './data/pokemonData.js';
 import BattleEngine from './BattleEngine.js';
 import Renderer from './Renderer.js';
+import Logger from './Logger.js';
 const playerName = document.getElementById('player-name');
 const playerHP = document.getElementById('player-hp');
 const playerHPBar = document.getElementById('player-hp-bar');
@@ -28,11 +29,11 @@ const switch6Button = document.getElementById('switch-6-button');
 const switchBackButton = document.getElementById('switch-back-button');
 const battleLog = document.getElementById('battle-log');
 const allPokemonData = Object.values(pokemonData);
+Logger.getInstance(battleLog);
+Logger.log('Loading Game');
 const engine = new BattleEngine(allPokemonData.slice(0, 6), // player team: first 6
 allPokemonData.slice(6, 12));
 const renderer = new Renderer(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton, battleLog);
 renderer.render();
-engine.log();
-renderer.log();
-console.log('loaded!');
+Logger.log('Loading Complete!');
 //# sourceMappingURL=index.js.map

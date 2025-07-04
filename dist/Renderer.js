@@ -1,5 +1,5 @@
 export default class Renderer {
-    constructor(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton, battleLog) {
+    constructor(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton) {
         this.engine = engine;
         this.playerName = playerName;
         this.playerHP = playerHP;
@@ -26,7 +26,6 @@ export default class Renderer {
         this.switch5Button = switch5Button;
         this.switch6Button = switch6Button;
         this.switchBackButton = switchBackButton;
-        this.battleLog = battleLog;
         this.setupEventListeners();
         this.render();
     }
@@ -162,33 +161,13 @@ export default class Renderer {
             }
         }
     }
-    log() {
-        console.log(this.engine, this.playerName, this.playerHP, this.playerHPBar, this.playerImage, this.opponentName, this.opponentHP, this.opponentHPBar, this.opponentImage, this.mainButtons, this.moveButton, this.switchButton, this.moveButtons, this.move1Button, this.move2Button, this.move3Button, this.move4Button, this.moveBackButton, this.switchButtons, this.switch1Button, this.switch2Button, this.switch3Button, this.switch4Button, this.switch5Button, this.switch6Button, this.switchBackButton, this.battleLog);
-    }
     switchPokemon(pokemonIndex) {
         const selectedPokemon = this.engine.playerTeam[pokemonIndex];
         if (selectedPokemon.hp > 0 &&
             selectedPokemon !== this.engine.playerActivePokemon) {
             this.engine.playerActivePokemon = selectedPokemon;
             const result = this.engine.selectMove(undefined);
-            switch (result) {
-                case 'Pokemon Select': {
-                    this.changeMenu('forcedSwitch');
-                    break;
-                }
-                case 'Opponent Win': {
-                    setTimeout(() => alert('Opponent Win!'), 100);
-                    break;
-                }
-                case 'Player Win': {
-                    setTimeout(() => alert('Player Win!'), 100);
-                    break;
-                }
-                default: {
-                    this.changeMenu('main');
-                    break;
-                }
-            }
+            this.handleResult(result);
             this.render();
         }
     }

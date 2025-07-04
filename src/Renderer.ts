@@ -30,7 +30,6 @@ export default class Renderer {
     private switch5Button: HTMLButtonElement,
     private switch6Button: HTMLButtonElement,
     private switchBackButton: HTMLButtonElement,
-    private battleLog: HTMLOListElement,
   ) {
     this.setupEventListeners();
     this.render();
@@ -184,38 +183,6 @@ export default class Renderer {
     }
   }
 
-  log(): void {
-    console.log(
-      this.engine,
-      this.playerName,
-      this.playerHP,
-      this.playerHPBar,
-      this.playerImage,
-      this.opponentName,
-      this.opponentHP,
-      this.opponentHPBar,
-      this.opponentImage,
-      this.mainButtons,
-      this.moveButton,
-      this.switchButton,
-      this.moveButtons,
-      this.move1Button,
-      this.move2Button,
-      this.move3Button,
-      this.move4Button,
-      this.moveBackButton,
-      this.switchButtons,
-      this.switch1Button,
-      this.switch2Button,
-      this.switch3Button,
-      this.switch4Button,
-      this.switch5Button,
-      this.switch6Button,
-      this.switchBackButton,
-      this.battleLog,
-    );
-  }
-
   private switchPokemon(pokemonIndex: number): void {
     const selectedPokemon = this.engine.playerTeam[pokemonIndex];
     if (
@@ -224,24 +191,7 @@ export default class Renderer {
     ) {
       this.engine.playerActivePokemon = selectedPokemon;
       const result = this.engine.selectMove(undefined);
-      switch (result) {
-        case 'Pokemon Select': {
-          this.changeMenu('forcedSwitch');
-          break;
-        }
-        case 'Opponent Win': {
-          setTimeout(() => alert('Opponent Win!'), 100);
-          break;
-        }
-        case 'Player Win': {
-          setTimeout(() => alert('Player Win!'), 100);
-          break;
-        }
-        default: {
-          this.changeMenu('main');
-          break;
-        }
-      }
+      this.handleResult(result);
       this.render();
     }
   }

@@ -1,6 +1,7 @@
 import { pokemonData } from './data/pokemonData.js';
 import BattleEngine from './BattleEngine.js';
 import Renderer from './Renderer.js';
+import Logger from './Logger.js';
 
 const playerName = document.getElementById('player-name')!;
 const playerHP = document.getElementById('player-hp')!;
@@ -67,6 +68,9 @@ const battleLog = document.getElementById('battle-log')! as HTMLOListElement;
 
 const allPokemonData = Object.values(pokemonData);
 
+Logger.getInstance(battleLog);
+Logger.log('Loading Game');
+
 const engine = new BattleEngine(
   allPokemonData.slice(0, 6), // player team: first 6
   allPokemonData.slice(6, 12), // opponent team: next 6
@@ -102,6 +106,5 @@ const renderer = new Renderer(
   battleLog,
 );
 renderer.render();
-engine.log();
-renderer.log();
-console.log('loaded!');
+
+Logger.log('Loading Complete!');

@@ -1,6 +1,7 @@
 import Pokemon from './Pokemon.js';
 import { moveData } from './data/moveData.js';
 import { typeChart } from './data/typeChart.js';
+import Logger from './Logger';
 export default class BattleEngine {
     constructor(playerTeamData, opponentTeamData) {
         this.playerTeam = playerTeamData.map((data) => new Pokemon(data));
@@ -51,9 +52,6 @@ export default class BattleEngine {
         this.useMove(secondPokemon, firstPokemon, secondMove);
         return checkBattleState();
     }
-    log() {
-        console.log(this.playerTeam, this.playerActivePokemon, this.opponentTeam, this.opponentActivePokemon);
-    }
     selectOpponentMove() {
         const opponentValidMoves = this.opponentActivePokemon.moves.filter((move) => move.pp);
         const opponentValidMovesTotal = opponentValidMoves.length;
@@ -82,6 +80,7 @@ export default class BattleEngine {
     useMove(attackingPokemon, defendingPokemon, move) {
         if (move === undefined)
             return;
+        Logger.log(`${attackingPokemon.name} used ${move.name} on ${defendingPokemon.name}!`);
         const attack = move.category === 'physical'
             ? attackingPokemon.attack
             : attackingPokemon.special;
@@ -106,6 +105,7 @@ export default class BattleEngine {
         const damage = Math.floor(((((2 * 100) / 5 + 2) * move.power * attack) / defense / 50 + 2) *
             modifier);
         defendingPokemon.hp = Math.max(0, defendingPokemon.hp - damage);
+        Logger.log(`${move.name} dealt ${damage} damage!`);
         if (move.effect && Math.random() <= move.effect.chance) {
             const effect = move.effect;
             const affectedPokemon = effect.affects === 'self' ? attackingPokemon : defendingPokemon;
@@ -120,24 +120,33 @@ export default class BattleEngine {
                     pokemon.isParalyzed ||
                     pokemon.isPoisoned);
             }
+            function logStatChange() {
+                Logger.log(`${affectedPokemon} had their ${effect.condition} ${effect.strength > 0 ? 'increased' : 'decreased'}${Math.abs(effect.strength) >= 2 ? ' sharply' : ''}!`);
+            }
             switch (effect.condition) {
                 case 'attack':
                     affectedPokemon.attackStage = boundedValue(affectedPokemon.attackStage + effect.strength);
+                    logStatChange();
                     break;
                 case 'defense':
                     affectedPokemon.defenseStage = boundedValue(affectedPokemon.defenseStage + effect.strength);
+                    logStatChange();
                     break;
                 case 'special':
                     affectedPokemon.specialStage = boundedValue(affectedPokemon.specialStage + effect.strength);
+                    logStatChange();
                     break;
                 case 'speed':
                     affectedPokemon.speedStage = boundedValue(affectedPokemon.speedStage + effect.strength);
+                    logStatChange();
                     break;
                 case 'accuracy':
                     affectedPokemon.accuracyStage = boundedValue(affectedPokemon.accuracyStage + effect.strength);
+                    logStatChange();
                     break;
                 case 'evasion':
                     affectedPokemon.evasionStage = boundedValue(affectedPokemon.evasionStage + effect.strength);
+                    logStatChange();
                     break;
                 case 'burn':
                     if (!isAffectedByStatus(affectedPokemon)) {
