@@ -70,12 +70,14 @@ const battleLog = document.getElementById('battle-log')! as HTMLOListElement;
 const allPokemonNames = Object.keys(pokemonData);
 
 function getRandomTeam(): PokemonData[] {
-  const names = [...allPokemonNames];
+  const names: string[] = [...allPokemonNames];
   for (let i = names.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [names[i], names[j]] = [names[j], names[i]];
   }
-  return names.slice(0, 6).map((name) => pokemonData[name]);
+  return names
+    .slice(0, 6)
+    .map((name: string) => (pokemonData as Record<string, PokemonData>)[name]);
 }
 
 const playerTeam = getRandomTeam();
