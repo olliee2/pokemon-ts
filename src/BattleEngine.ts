@@ -145,12 +145,31 @@ export default class BattleEngine {
       modifier *= 1.5;
     }
 
+    let typeEffectiveness = 1;
     for (const defType of defendingPokemon.types) {
       const chart = typeChart[move.type];
       if (chart && chart[defType] !== undefined) {
-        modifier *= chart[defType];
+        typeEffectiveness *= chart[defType];
       }
     }
+    switch (typeEffectiveness) {
+      case 4:
+        Logger.log('It\'s extremely effective!');
+        break;
+      case 2:
+        Logger.log('It\'s super effective!');
+        break;
+      case 0.5:
+        Logger.log('It\'s not very effective...');
+        break;
+      case 0.25:
+        Logger.log('It\'s barely effective...');
+        break;
+      case 0:
+        Logger.log('It had no effect');
+        break;
+    }
+    modifier *= typeEffectiveness;
 
     modifier *= (Math.random() * 38 + 217) / 255;
 

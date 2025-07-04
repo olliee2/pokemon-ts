@@ -28,3 +28,6 @@ Contains the compiled JavaScript that is then ran.
 - Raichu
 - Sandslash
 - Nidoqueen
+
+hosted on cloudflare pages at
+https://pokemon-ts.pages.dev

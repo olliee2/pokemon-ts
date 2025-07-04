@@ -1,5 +1,5 @@
 import BattleEngine from './BattleEngine';
-import Logger from './Logger';
+import Logger from './Logger.js';
 
 type Menu = 'main' | 'move' | 'switch' | 'forcedSwitch';
 
