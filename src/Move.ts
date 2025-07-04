@@ -1,8 +1,9 @@
 import { Condition } from './types/Condition';
+import { Type } from './data/typeChart';
 
 export class Move {
   public name: string;
-  public type: string;
+  public type: Type;
   public category: 'physical' | 'special' | 'status';
   public power: number;
   public accuracy: number;
@@ -19,7 +20,7 @@ export class Move {
 
   constructor(params: {
     name: string;
-    type: string;
+    type: Type;
     category: 'physical' | 'special' | 'status';
     power?: number;
     accuracy?: number;

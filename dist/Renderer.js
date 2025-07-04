@@ -106,14 +106,35 @@ export default class Renderer {
         this.opponentImage.src = `assets/front/${opponentPokemon.name}.png`;
     }
     useMove(moveIndex) {
-        const moves = this.engine.playerActivePokemon.moves;
-        if (!moves.some((move) => move.pp)) {
-            this.engine.selectMove(-1);
-        }
-        else if (moves[moveIndex].pp) {
-            this.engine.selectMove(moveIndex);
-            this.changeMenu('main');
-            this.render();
+        if (this.engine.playerActivePokemon.hp > 0) {
+            const moves = this.engine.playerActivePokemon.moves;
+            const moveToUse = !moves.some((move) => move.pp)
+                ? -1
+                : moves[moveIndex].pp
+                    ? moveIndex
+                    : undefined;
+            if (moveToUse !== undefined) {
+                const result = this.engine.selectMove(moveToUse);
+                switch (result) {
+                    case 'Pokemon Select': {
+                        this.changeMenu('forcedSwitch');
+                        break;
+                    }
+                    case 'Opponent Win': {
+                        setTimeout(() => alert('Opponent Win!'), 100);
+                        break;
+                    }
+                    case 'Player Win': {
+                        setTimeout(() => alert('Player Win!'), 100);
+                        break;
+                    }
+                    default: {
+                        this.changeMenu('main');
+                    }
+                }
+                this.changeMenu('main');
+                this.render();
+            }
         }
     }
     log() {

@@ -2,27 +2,26 @@ import type { PokemonData } from './types/PokemonData';
 import Pokemon from './Pokemon.js';
 import { moveData } from './data/moveData.js';
 import { Move } from './Move.js';
+import { typeChart } from './data/typeChart.js';
 
 type Player = 'player' | 'opponent';
 
 export default class BattleEngine {
   public playerTeam: Pokemon[];
-  public playerActiveSlot: number;
   public playerActivePokemon: Pokemon;
   public opponentTeam: Pokemon[];
-  public opponentActiveSlot: number;
   public opponentActivePokemon: Pokemon;
 
   constructor(playerTeamData: PokemonData[], opponentTeamData: PokemonData[]) {
     this.playerTeam = playerTeamData.map((data) => new Pokemon(data));
-    this.playerActiveSlot = 0;
     this.playerActivePokemon = this.playerTeam[0];
     this.opponentTeam = opponentTeamData.map((data) => new Pokemon(data));
-    this.opponentActiveSlot = 0;
     this.opponentActivePokemon = this.opponentTeam[0];
   }
 
-  selectMove(playerMoveIndex: number): void {
+  selectMove(
+    playerMoveIndex: number,
+  ): 'Pokemon Select' | 'Player Win' | 'Opponent Win' | undefined {
     const playerMove =
       playerMoveIndex >= 0
         ? this.playerActivePokemon.moves[playerMoveIndex]
@@ -37,28 +36,59 @@ export default class BattleEngine {
       opponentMove,
     );
 
-    if (firstPlayer === 'player') {
-      this.useMove(
-        this.playerActivePokemon,
-        this.opponentActivePokemon,
-        playerMove,
-      );
-    } else {
-      this.useMove(
-        this.opponentActivePokemon,
-        this.playerActivePokemon,
-        opponentMove,
-      );
+    const [firstPokemon, secondPokemon, firstMove, secondMove] =
+      firstPlayer === 'player'
+        ? [
+            this.playerActivePokemon,
+            this.opponentActivePokemon,
+            playerMove,
+            opponentMove,
+          ]
+        : [
+            this.opponentActivePokemon,
+            this.playerActivePokemon,
+            opponentMove,
+            playerMove,
+          ];
+
+    this.useMove(firstPokemon, secondPokemon, firstMove);
+
+    if (this.opponentActivePokemon.hp <= 0) {
+      this.opponentActivePokemon = this.selectOpponentPokemon();
+      if (this.opponentActivePokemon.hp <= 0) {
+        return 'Player Win';
+      }
+      return undefined;
+    } else if (this.playerActivePokemon.hp <= 0) {
+      if (this.playerTeam.some((pokemon) => pokemon.hp)) {
+        return 'Pokemon Select';
+      }
+      return 'Opponent Win';
     }
+
+    this.useMove(secondPokemon, firstPokemon, secondMove);
+
+    if (this.opponentActivePokemon.hp <= 0) {
+      this.opponentActivePokemon = this.selectOpponentPokemon();
+      if (this.opponentActivePokemon.hp <= 0) {
+        return 'Player Win';
+      }
+      return undefined;
+    } else if (this.playerActivePokemon.hp <= 0) {
+      if (this.playerTeam.some((pokemon) => pokemon.hp)) {
+        return 'Pokemon Select';
+      }
+      return 'Opponent Win';
+    }
+
+    return undefined;
   }
 
   log(): void {
     console.log(
       this.playerTeam,
-      this.playerActiveSlot,
       this.playerActivePokemon,
       this.opponentTeam,
-      this.opponentActiveSlot,
       this.opponentActivePokemon,
     );
   }
@@ -111,95 +141,6 @@ export default class BattleEngine {
     if (attackingPokemon.types.includes(move.type)) {
       modifier *= 1.5;
     }
-
-    const typeChart: Record<string, Record<string, number>> = {
-      normal: { rock: 0.5, ghost: 0 },
-      fire: {
-        fire: 0.5,
-        water: 0.5,
-        grass: 2,
-        ice: 2,
-        bug: 2,
-        rock: 0.5,
-        dragon: 0.5,
-      },
-      water: {
-        fire: 2,
-        water: 0.5,
-        grass: 0.5,
-        ground: 2,
-        rock: 2,
-        dragon: 0.5,
-      },
-      electric: {
-        water: 2,
-        electric: 0.5,
-        grass: 0.5,
-        ground: 0,
-        flying: 2,
-        dragon: 0.5,
-      },
-      grass: {
-        fire: 0.5,
-        water: 2,
-        grass: 0.5,
-        poison: 0.5,
-        ground: 2,
-        flying: 0.5,
-        bug: 0.5,
-        rock: 2,
-        dragon: 0.5,
-      },
-      ice: {
-        fire: 0.5,
-        water: 0.5,
-        grass: 2,
-        ice: 0.5,
-        ground: 2,
-        flying: 2,
-        dragon: 2,
-      },
-      fighting: {
-        normal: 2,
-        ice: 2,
-        rock: 2,
-        ghost: 0,
-        poison: 0.5,
-        flying: 0.5,
-        psychic: 0.5,
-        bug: 0.5,
-      },
-      poison: {
-        grass: 2,
-        poison: 0.5,
-        ground: 0.5,
-        bug: 2,
-        rock: 0.5,
-        ghost: 0.5,
-      },
-      ground: {
-        fire: 2,
-        electric: 2,
-        grass: 0.5,
-        poison: 2,
-        flying: 0,
-        bug: 0.5,
-        rock: 2,
-      },
-      flying: { electric: 0.5, grass: 2, fighting: 2, bug: 2, rock: 0.5 },
-      psychic: { fighting: 2, poison: 2, psychic: 0.5 },
-      bug: {
-        fire: 0.5,
-        grass: 2,
-        fighting: 0.5,
-        poison: 2,
-        flying: 0.5,
-        ghost: 0.5,
-      },
-      rock: { fire: 2, ice: 2, fighting: 0.5, ground: 0.5, flying: 2, bug: 2 },
-      ghost: { normal: 0, psychic: 0 },
-      dragon: { dragon: 2 },
-    };
 
     for (const defType of defendingPokemon.types) {
       const chart = typeChart[move.type];
@@ -319,5 +260,18 @@ export default class BattleEngine {
           break;
       }
     }
+  }
+
+  private selectOpponentPokemon(): Pokemon {
+    const opponentValidPokemon = this.opponentTeam.filter(
+      (pokemon) => pokemon.hp >= 0,
+    );
+    const opponentValidPokemonTotal = opponentValidPokemon.length;
+    const opponentPokemonIndex = opponentValidPokemonTotal
+      ? Math.floor(Math.random() * opponentValidPokemonTotal)
+      : -1;
+    return opponentPokemonIndex >= 0
+      ? this.opponentTeam[opponentPokemonIndex]
+      : this.opponentTeam[0];
   }
 }
