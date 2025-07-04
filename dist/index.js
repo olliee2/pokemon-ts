@@ -30,10 +30,10 @@ const switchBackButton = document.getElementById('switch-back-button');
 const battleLog = document.getElementById('battle-log');
 const allPokemonData = Object.values(pokemonData);
 Logger.getInstance(battleLog);
-Logger.log('Loading Game');
+Logger.log('Loading Game...');
 const engine = new BattleEngine(allPokemonData.slice(0, 6), // player team: first 6
 allPokemonData.slice(6, 12));
-const renderer = new Renderer(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton, battleLog);
+const renderer = new Renderer(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton);
 renderer.render();
 Logger.log('Loading Complete!');
 //# sourceMappingURL=index.js.map

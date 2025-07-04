@@ -69,7 +69,7 @@ const battleLog = document.getElementById('battle-log')! as HTMLOListElement;
 const allPokemonData = Object.values(pokemonData);
 
 Logger.getInstance(battleLog);
-Logger.log('Loading Game');
+Logger.log('Loading Game...');
 
 const engine = new BattleEngine(
   allPokemonData.slice(0, 6), // player team: first 6
@@ -103,7 +103,6 @@ const renderer = new Renderer(
   switch5Button,
   switch6Button,
   switchBackButton,
-  battleLog,
 );
 renderer.render();
 

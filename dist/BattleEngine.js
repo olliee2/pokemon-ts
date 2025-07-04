@@ -1,7 +1,7 @@
 import Pokemon from './Pokemon.js';
 import { moveData } from './data/moveData.js';
 import { typeChart } from './data/typeChart.js';
-import Logger from './Logger';
+import Logger from './Logger.js';
 export default class BattleEngine {
     constructor(playerTeamData, opponentTeamData) {
         this.playerTeam = playerTeamData.map((data) => new Pokemon(data));
@@ -33,14 +33,20 @@ export default class BattleEngine {
         // Helper to check win/lose/switch after a move
         const checkBattleState = () => {
             if (this.opponentActivePokemon.hp <= 0) {
+                Logger.log(`The opponent's ${this.opponentActivePokemon.name} fainted!`);
                 this.opponentActivePokemon = this.selectOpponentPokemon();
-                if (this.opponentActivePokemon.hp <= 0)
+                if (this.opponentActivePokemon.hp <= 0) {
+                    Logger.log('The opponent ran out of Pokémon.');
+                    Logger.log('You win!');
                     return 'Player Win';
+                }
+                Logger.log(`The opponent sent out ${this.opponentActivePokemon.name}!`);
                 return undefined;
             }
             if (this.playerActivePokemon.hp <= 0) {
-                if (this.playerTeam.some((pokemon) => pokemon.hp))
+                if (this.playerTeam.some((pokemon) => pokemon.hp)) {
                     return 'Pokemon Select';
+                }
                 return 'Opponent Win';
             }
             return undefined;
@@ -104,8 +110,9 @@ export default class BattleEngine {
         }
         const damage = Math.floor(((((2 * 100) / 5 + 2) * move.power * attack) / defense / 50 + 2) *
             modifier);
+        const originalHP = defendingPokemon.hp;
         defendingPokemon.hp = Math.max(0, defendingPokemon.hp - damage);
-        Logger.log(`${move.name} dealt ${damage} damage!`);
+        Logger.log(`${move.name} dealt ${originalHP - defendingPokemon.hp} damage!`);
         if (move.effect && Math.random() <= move.effect.chance) {
             const effect = move.effect;
             const affectedPokemon = effect.affects === 'self' ? attackingPokemon : defendingPokemon;
@@ -151,42 +158,54 @@ export default class BattleEngine {
                 case 'burn':
                     if (!isAffectedByStatus(affectedPokemon)) {
                         affectedPokemon.isBurned = true;
+                        Logger.log(`${affectedPokemon.name} has been burned!`);
                     }
                     break;
                 case 'freeze':
                     if (!isAffectedByStatus(affectedPokemon)) {
                         affectedPokemon.isFrozen = true;
+                        Logger.log(`${affectedPokemon.name} has been frozen!`);
                     }
                     break;
                 case 'paralysis':
                     if (!isAffectedByStatus(affectedPokemon)) {
                         affectedPokemon.isParalyzed = true;
+                        Logger.log(`${affectedPokemon.name} has been paralyzed!`);
                     }
                     break;
                 case 'poison':
                     if (!isAffectedByStatus(affectedPokemon)) {
                         affectedPokemon.isPoisoned = true;
+                        Logger.log(`${affectedPokemon.name} has been poisoned!`);
                     }
                     break;
                 case 'badlypoisoned':
                     if (!isAffectedByStatus(affectedPokemon)) {
-                        affectedPokemon.badlyPoisonedStage++;
+                        affectedPokemon.badlyPoisonedStage = 1;
+                        Logger.log(`${affectedPokemon.name} has been badly poisoned!`);
                     }
                     break;
                 case 'sleep':
                     if (!isAffectedByStatus(affectedPokemon)) {
                         affectedPokemon.sleepStage = Math.floor(Math.random() * 3) + 1;
+                        Logger.log(`${affectedPokemon.name} has been put to sleep!`);
                     }
                     break;
                 case 'flinch':
                     affectedPokemon.isFlinched = true;
                     break;
-                case 'drain':
+                case 'drain': {
+                    const originalHP = affectedPokemon.hp;
                     affectedPokemon.hp = Math.min(affectedPokemon.baseHP, affectedPokemon.hp + damage * effect.strength);
+                    Logger.log(`${affectedPokemon} healed ${affectedPokemon.hp - originalHP}!`);
                     break;
-                case 'recoil':
+                }
+                case 'recoil': {
+                    const originalHP = affectedPokemon.hp;
                     affectedPokemon.hp = Math.max(0, affectedPokemon.hp - damage * effect.strength);
+                    Logger.log(`${affectedPokemon} took ${affectedPokemon.hp - originalHP} recoil damage!`);
                     break;
+                }
             }
         }
     }
