@@ -165,8 +165,7 @@ export default class BattleEngine {
         if (Math.random() <= critChance) {
             modifier *= 2;
         }
-        const damage = Math.floor(((((2 * 100) / 5 + 2) * move.power * attack) / defense / 50 + 2) *
-            modifier);
+        const damage = Math.floor(((42 * move.power * attack) / defense / 50 + 2) * modifier);
         const originalHP = defendingPokemon.hp;
         defendingPokemon.hp = Math.max(0, defendingPokemon.hp - damage);
         Logger.log(`${move.name} dealt ${originalHP - defendingPokemon.hp} damage!`);
@@ -260,7 +259,7 @@ export default class BattleEngine {
                 case 'recoil': {
                     const originalHP = affectedPokemon.hp;
                     affectedPokemon.hp = Math.max(0, affectedPokemon.hp - damage * effect.strength);
-                    Logger.log(`${affectedPokemon} took ${affectedPokemon.hp - originalHP} recoil damage!`);
+                    Logger.log(`${affectedPokemon.name} took ${affectedPokemon.hp - originalHP} recoil damage!`);
                     break;
                 }
             }

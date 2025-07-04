@@ -354,7 +354,7 @@ export default class BattleEngine {
             affectedPokemon.hp - damage * effect.strength,
           );
           Logger.log(
-            `${affectedPokemon} took ${affectedPokemon.hp - originalHP} recoil damage!`,
+            `${affectedPokemon.name} took ${affectedPokemon.hp - originalHP} recoil damage!`,
           );
           break;
         }
