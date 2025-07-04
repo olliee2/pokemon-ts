@@ -223,8 +223,7 @@ export default class BattleEngine {
     }
 
     const damage = Math.floor(
-      ((((2 * 100) / 5 + 2) * move.power * attack) / defense / 50 + 2) *
-        modifier,
+      ((42 * move.power * attack) / defense / 50 + 2) * modifier,
     );
 
     const originalHP = defendingPokemon.hp;
