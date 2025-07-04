@@ -35,7 +35,9 @@ function getRandomTeam() {
         const j = Math.floor(Math.random() * (i + 1));
         [names[i], names[j]] = [names[j], names[i]];
     }
-    return names.slice(0, 6).map((name) => pokemonData[name]);
+    return names
+        .slice(0, 6)
+        .map((name) => pokemonData[name]);
 }
 const playerTeam = getRandomTeam();
 const opponentTeam = getRandomTeam();
