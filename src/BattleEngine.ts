@@ -51,44 +51,65 @@ export default class BattleEngine {
             playerMove,
           ];
 
-    // Helper to check win/lose/switch after a move
-    const checkBattleState = ():
-      | 'Pokemon Select'
-      | 'Player Win'
-      | 'Opponent Win'
-      | undefined => {
-      if (this.opponentActivePokemon.hp <= 0) {
-        Logger.log(
-          `The opponent's ${this.opponentActivePokemon.name} fainted!`,
-        );
-        this.opponentActivePokemon = this.selectOpponentPokemon();
-        if (this.opponentActivePokemon.hp <= 0) {
-          Logger.log('The opponent ran out of Pokémon.');
-          Logger.log('You win!');
-          return 'Player Win';
-        }
-        Logger.log(`The opponent sent out ${this.opponentActivePokemon.name}!`);
-        return undefined;
-      }
-      if (this.playerActivePokemon.hp <= 0) {
-        Logger.log(`Your ${this.playerActivePokemon.name} fainted!`);
-        if (this.playerTeam.some((pokemon) => pokemon.hp)) {
-          Logger.log('Choose a new Pokémon to send out.');
-          return 'Pokemon Select';
-        }
-        Logger.log('You ran out of Pokémon.');
-        Logger.log('The opponent won!');
-        return 'Opponent Win';
-      }
-      return undefined;
-    };
-
     this.useMove(firstPokemon, secondPokemon, firstMove);
-    const result = checkBattleState();
+    const result = this.checkBattleState();
     if (result) return result;
 
     this.useMove(secondPokemon, firstPokemon, secondMove);
-    return checkBattleState();
+    this.handleTurnEnd();
+    return this.checkBattleState();
+  }
+
+  handleTurnEnd(): void {
+    [this.playerActivePokemon, this.opponentActivePokemon].forEach(
+      (pokemon) => {
+        if (pokemon.isBurned) {
+          pokemon.hp -= Math.max(1, Math.floor(pokemon.baseHP / 16));
+        }
+        if (pokemon.isPoisoned) {
+          pokemon.hp -= Math.max(1, Math.floor(pokemon.baseHP / 16));
+        }
+        if (pokemon.badlyPoisonedStage) {
+          pokemon.hp -= Math.max(
+            1,
+            (Math.floor(pokemon.baseHP) * pokemon.badlyPoisonedStage) / 16,
+          );
+          pokemon.badlyPoisonedStage++;
+        }
+      },
+    );
+  }
+
+  checkBattleState():
+    | 'Pokemon Select'
+    | 'Player Win'
+    | 'Opponent Win'
+    | undefined {
+    if (this.opponentActivePokemon.hp <= 0) {
+      this.opponentActivePokemon.hp = 0;
+      Logger.log(`The opponent's ${this.opponentActivePokemon.name} fainted!`);
+      this.opponentActivePokemon = this.selectOpponentPokemon();
+      if (this.opponentActivePokemon.hp <= 0) {
+        this.opponentActivePokemon.hp = 0;
+        Logger.log('The opponent ran out of Pokémon.');
+        Logger.log('You win!');
+        return 'Player Win';
+      }
+      Logger.log(`The opponent sent out ${this.opponentActivePokemon.name}!`);
+      return undefined;
+    }
+    if (this.playerActivePokemon.hp <= 0) {
+      this.playerActivePokemon.hp = 0;
+      Logger.log(`Your ${this.playerActivePokemon.name} fainted!`);
+      if (this.playerTeam.some((pokemon) => pokemon.hp)) {
+        Logger.log('Choose a new Pokémon to send out.');
+        return 'Pokemon Select';
+      }
+      Logger.log('You ran out of Pokémon.');
+      Logger.log('The opponent won!');
+      return 'Opponent Win';
+    }
+    return undefined;
   }
 
   private selectOpponentMove(): Move {
@@ -130,6 +151,18 @@ export default class BattleEngine {
     if (move === undefined) return;
 
     this.synchronizeStats();
+
+    if (attackingPokemon.isFrozen) {
+      Logger.log(`${attackingPokemon.name} is frozen!`);
+      return;
+    }
+    if (attackingPokemon.sleepStage) {
+      Logger.log(`${attackingPokemon.name} is fast asleep!`);
+      return;
+    }
+    if (attackingPokemon.isParalyzed && Math.random() < 0.25) {
+      Logger.log(`${attackingPokemon} is paralyzed and cannot move!`);
+    }
 
     Logger.log(
       `${attackingPokemon.name} used ${move.name} on ${defendingPokemon.name}!`,
@@ -367,6 +400,7 @@ export default class BattleEngine {
         pokemon.attack = Math.floor(
           pokemon.baseAttack * getStage(pokemon.attackStage),
         );
+        if (pokemon.isBurned) pokemon.attack /= 2;
         pokemon.defense = Math.floor(
           pokemon.baseDefense * getStage(pokemon.defenseStage),
         );
@@ -376,6 +410,7 @@ export default class BattleEngine {
         pokemon.speed = Math.floor(
           pokemon.baseSpeed * getStage(pokemon.speedStage),
         );
+        if (pokemon.isParalyzed) pokemon.speed /= 2;
         pokemon.accuracy = getStage(pokemon.accuracyStage);
         pokemon.evasion = getStage(pokemon.evasionStage);
       },

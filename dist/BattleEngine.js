@@ -1,5 +1,6 @@
 import Pokemon from './Pokemon.js';
 import { moveData } from './data/moveData.js';
+import { Move } from './Move.js';
 import { typeChart } from './data/typeChart.js';
 import Logger from './Logger.js';
 export default class BattleEngine {
@@ -31,30 +32,6 @@ export default class BattleEngine {
                 playerMove,
             ];
         // Helper to check win/lose/switch after a move
-        const checkBattleState = () => {
-            if (this.opponentActivePokemon.hp <= 0) {
-                Logger.log(`The opponent's ${this.opponentActivePokemon.name} fainted!`);
-                this.opponentActivePokemon = this.selectOpponentPokemon();
-                if (this.opponentActivePokemon.hp <= 0) {
-                    Logger.log('The opponent ran out of Pokémon.');
-                    Logger.log('You win!');
-                    return 'Player Win';
-                }
-                Logger.log(`The opponent sent out ${this.opponentActivePokemon.name}!`);
-                return undefined;
-            }
-            if (this.playerActivePokemon.hp <= 0) {
-                Logger.log(`Your ${this.playerActivePokemon.name} fainted!`);
-                if (this.playerTeam.some((pokemon) => pokemon.hp)) {
-                    Logger.log('Choose a new Pokémon to send out.');
-                    return 'Pokemon Select';
-                }
-                Logger.log('You ran out of Pokémon.');
-                Logger.log('The opponent won!');
-                return 'Opponent Win';
-            }
-            return undefined;
-        };
         this.useMove(firstPokemon, secondPokemon, firstMove);
         const result = checkBattleState();
         if (result)
@@ -62,219 +39,260 @@ export default class BattleEngine {
         this.useMove(secondPokemon, firstPokemon, secondMove);
         return checkBattleState();
     }
-    selectOpponentMove() {
-        const opponentValidMoves = this.opponentActivePokemon.moves.filter((move) => move.pp);
-        const opponentValidMovesTotal = opponentValidMoves.length;
-        const opponentMoveIndex = opponentValidMovesTotal
-            ? Math.floor(Math.random() * opponentValidMovesTotal)
-            : -1;
-        return opponentMoveIndex >= 0
-            ? this.opponentActivePokemon.moves[opponentMoveIndex]
-            : structuredClone(moveData.Struggle);
-    }
-    calculateFirstPlayer(playerActivePokemon, playerMove, opponentActivePokemon, opponentMove) {
-        if (playerMove === undefined)
-            return 'opponent';
-        if (playerMove.priority > opponentMove.priority)
-            return 'player';
-        if (playerMove.priority < opponentMove.priority)
-            return 'opponent';
-        if (playerActivePokemon.speed > opponentActivePokemon.speed)
-            return 'player';
-        if (playerActivePokemon.speed < opponentActivePokemon.speed)
-            return 'opponent';
-        if (Math.random() > 0.5)
-            return 'player';
-        return 'opponent';
-    }
-    useMove(attackingPokemon, defendingPokemon, move) {
-        if (move === undefined)
-            return;
-        this.synchronizeStats();
-        Logger.log(`${attackingPokemon.name} used ${move.name} on ${defendingPokemon.name}!`);
-        const hitChance = (move.accuracy * attackingPokemon.accuracy) / defendingPokemon.evasion;
-        if (Math.random() > hitChance) {
-            Logger.log('But it missed!');
-            return;
-        }
-        const attack = move.category === 'physical'
-            ? attackingPokemon.attack
-            : attackingPokemon.special;
-        const defense = move.category === 'physical'
-            ? defendingPokemon.defense
-            : defendingPokemon.special;
-        let modifier = 1;
-        if (attackingPokemon.types.includes(move.type)) {
-            modifier *= 1.5;
-        }
-        let typeEffectiveness = 1;
-        for (const defType of defendingPokemon.types) {
-            const chart = typeChart[move.type];
-            if (chart && chart[defType] !== undefined) {
-                typeEffectiveness *= chart[defType];
-            }
-        }
-        switch (typeEffectiveness) {
-            case 4:
-                Logger.log(`It's extremely effective!`);
-                break;
-            case 2:
-                Logger.log(`It's super effective!`);
-                break;
-            case 0.5:
-                Logger.log(`It's not very effective...`);
-                break;
-            case 0.25:
-                Logger.log(`It's barely effective...`);
-                break;
-            case 0:
-                Logger.log(`It had no effect`);
-                break;
-        }
-        modifier *= typeEffectiveness;
-        modifier *= (Math.random() * 38 + 217) / 255;
-        const critChance = (attackingPokemon.baseSpeed * move.critRatio) / 512;
-        if (Math.random() <= critChance) {
-            modifier *= 2;
-        }
-        const damage = Math.floor(((((2 * 100) / 5 + 2) * move.power * attack) / defense / 50 + 2) *
-            modifier);
-        const originalHP = defendingPokemon.hp;
-        defendingPokemon.hp = Math.max(0, defendingPokemon.hp - damage);
-        Logger.log(`${move.name} dealt ${originalHP - defendingPokemon.hp} damage!`);
-        if (move.effect && Math.random() <= move.effect.chance) {
-            const effect = move.effect;
-            const affectedPokemon = effect.affects === 'self' ? attackingPokemon : defendingPokemon;
-            function boundedValue(stage) {
-                return Math.max(-6, Math.min(6, stage));
-            }
-            function isAffectedByStatus(pokemon) {
-                return (!!pokemon.badlyPoisonedStage ||
-                    !!pokemon.sleepStage ||
-                    pokemon.isBurned ||
-                    pokemon.isFrozen ||
-                    pokemon.isParalyzed ||
-                    pokemon.isPoisoned);
-            }
-            function logStatChange() {
-                Logger.log(`${affectedPokemon} had their ${effect.condition} ${effect.strength > 0 ? 'increased' : 'decreased'}${Math.abs(effect.strength) >= 2 ? ' sharply' : ''}!`);
-            }
-            switch (effect.condition) {
-                case 'attack':
-                    affectedPokemon.attackStage = boundedValue(affectedPokemon.attackStage + effect.strength);
-                    logStatChange();
-                    break;
-                case 'defense':
-                    affectedPokemon.defenseStage = boundedValue(affectedPokemon.defenseStage + effect.strength);
-                    logStatChange();
-                    break;
-                case 'special':
-                    affectedPokemon.specialStage = boundedValue(affectedPokemon.specialStage + effect.strength);
-                    logStatChange();
-                    break;
-                case 'speed':
-                    affectedPokemon.speedStage = boundedValue(affectedPokemon.speedStage + effect.strength);
-                    logStatChange();
-                    break;
-                case 'accuracy':
-                    affectedPokemon.accuracyStage = boundedValue(affectedPokemon.accuracyStage + effect.strength);
-                    logStatChange();
-                    break;
-                case 'evasion':
-                    affectedPokemon.evasionStage = boundedValue(affectedPokemon.evasionStage + effect.strength);
-                    logStatChange();
-                    break;
-                case 'burn':
-                    if (!isAffectedByStatus(affectedPokemon)) {
-                        affectedPokemon.isBurned = true;
-                        Logger.log(`${affectedPokemon.name} has been burned!`);
-                    }
-                    break;
-                case 'freeze':
-                    if (!isAffectedByStatus(affectedPokemon)) {
-                        affectedPokemon.isFrozen = true;
-                        Logger.log(`${affectedPokemon.name} has been frozen!`);
-                    }
-                    break;
-                case 'paralysis':
-                    if (!isAffectedByStatus(affectedPokemon)) {
-                        affectedPokemon.isParalyzed = true;
-                        Logger.log(`${affectedPokemon.name} has been paralyzed!`);
-                    }
-                    break;
-                case 'poison':
-                    if (!isAffectedByStatus(affectedPokemon)) {
-                        affectedPokemon.isPoisoned = true;
-                        Logger.log(`${affectedPokemon.name} has been poisoned!`);
-                    }
-                    break;
-                case 'badlypoisoned':
-                    if (!isAffectedByStatus(affectedPokemon)) {
-                        affectedPokemon.badlyPoisonedStage = 1;
-                        Logger.log(`${affectedPokemon.name} has been badly poisoned!`);
-                    }
-                    break;
-                case 'sleep':
-                    if (!isAffectedByStatus(affectedPokemon)) {
-                        affectedPokemon.sleepStage = Math.floor(Math.random() * 3) + 1;
-                        Logger.log(`${affectedPokemon.name} has been put to sleep!`);
-                    }
-                    break;
-                case 'flinch':
-                    affectedPokemon.isFlinched = true;
-                    break;
-                case 'drain': {
-                    const originalHP = affectedPokemon.hp;
-                    affectedPokemon.hp = Math.min(affectedPokemon.baseHP, affectedPokemon.hp + damage * effect.strength);
-                    Logger.log(`${affectedPokemon} healed ${affectedPokemon.hp - originalHP}!`);
-                    break;
-                }
-                case 'recoil': {
-                    const originalHP = affectedPokemon.hp;
-                    affectedPokemon.hp = Math.max(0, affectedPokemon.hp - damage * effect.strength);
-                    Logger.log(`${affectedPokemon} took ${affectedPokemon.hp - originalHP} recoil damage!`);
-                    break;
-                }
-            }
-        }
-        this.synchronizeStats();
-    }
-    selectOpponentPokemon() {
-        const opponentValidPokemon = this.opponentTeam.filter((pokemon) => pokemon.hp >= 0);
-        const opponentValidPokemonTotal = opponentValidPokemon.length;
-        const opponentPokemonIndex = opponentValidPokemonTotal
-            ? Math.floor(Math.random() * opponentValidPokemonTotal)
-            : -1;
-        return opponentPokemonIndex >= 0
-            ? this.opponentTeam[opponentPokemonIndex]
-            : this.opponentTeam[0];
-    }
-    synchronizeStats() {
-        const stageMultiplier = [
-            1 / 3,
-            3 / 8,
-            3 / 7,
-            0.5,
-            3 / 5,
-            3 / 4,
-            1,
-            4 / 3,
-            5 / 3,
-            2,
-            7 / 3,
-            8 / 3,
-            3,
-        ];
-        // Index 0 = -6, ..., Index 6 = 0, ..., Index 12 = +6
+    handleTurnEnd() {
         [this.playerActivePokemon, this.opponentActivePokemon].forEach((pokemon) => {
-            const getStage = (stage) => stageMultiplier[stage + 6];
-            pokemon.attack = Math.floor(pokemon.baseAttack * getStage(pokemon.attackStage));
-            pokemon.defense = Math.floor(pokemon.baseDefense * getStage(pokemon.defenseStage));
-            pokemon.special = Math.floor(pokemon.baseSpecial * getStage(pokemon.specialStage));
-            pokemon.speed = Math.floor(pokemon.baseSpeed * getStage(pokemon.speedStage));
-            pokemon.accuracy = getStage(pokemon.accuracyStage);
-            pokemon.evasion = getStage(pokemon.evasionStage);
+            console.log(pokemon);
         });
     }
 }
+{
+    if (this.opponentActivePokemon.hp <= 0) {
+        Logger.log(`The opponent's ${this.opponentActivePokemon.name} fainted!`);
+        this.opponentActivePokemon = this.selectOpponentPokemon();
+        if (this.opponentActivePokemon.hp <= 0) {
+            Logger.log('The opponent ran out of Pokémon.');
+            Logger.log('You win!');
+            return 'Player Win';
+        }
+        Logger.log(`The opponent sent out ${this.opponentActivePokemon.name}!`);
+        return undefined;
+    }
+    if (this.playerActivePokemon.hp <= 0) {
+        Logger.log(`Your ${this.playerActivePokemon.name} fainted!`);
+        if (this.playerTeam.some((pokemon) => pokemon.hp)) {
+            Logger.log('Choose a new Pokémon to send out.');
+            return 'Pokemon Select';
+        }
+        Logger.log('You ran out of Pokémon.');
+        Logger.log('The opponent won!');
+        return 'Opponent Win';
+    }
+    // we need to do end of turn activity hahahahah
+    // ok end of a turn
+    this.handleTurnEnd();
+    return undefined;
+}
+;
+selectOpponentMove();
+Move;
+{
+    const opponentValidMoves = this.opponentActivePokemon.moves.filter((move) => move.pp);
+    const opponentValidMovesTotal = opponentValidMoves.length;
+    const opponentMoveIndex = opponentValidMovesTotal
+        ? Math.floor(Math.random() * opponentValidMovesTotal)
+        : -1;
+    return opponentMoveIndex >= 0
+        ? this.opponentActivePokemon.moves[opponentMoveIndex]
+        : structuredClone(moveData.Struggle);
+}
+calculateFirstPlayer(playerActivePokemon, Pokemon, playerMove, Move | undefined, opponentActivePokemon, Pokemon, opponentMove, Move);
+Player;
+{
+    if (playerMove === undefined)
+        return 'opponent';
+    if (playerMove.priority > opponentMove.priority)
+        return 'player';
+    if (playerMove.priority < opponentMove.priority)
+        return 'opponent';
+    if (playerActivePokemon.speed > opponentActivePokemon.speed)
+        return 'player';
+    if (playerActivePokemon.speed < opponentActivePokemon.speed)
+        return 'opponent';
+    if (Math.random() > 0.5)
+        return 'player';
+    return 'opponent';
+}
+useMove(attackingPokemon, Pokemon, defendingPokemon, Pokemon, move, Move | undefined);
+void {
+    if(move) { }
+} === undefined;
+return;
+this.synchronizeStats();
+Logger.log(`${attackingPokemon.name} used ${move.name} on ${defendingPokemon.name}!`);
+const hitChance = (move.accuracy * attackingPokemon.accuracy) / defendingPokemon.evasion;
+if (Math.random() > hitChance) {
+    Logger.log('But it missed!');
+    return;
+}
+const attack = move.category === 'physical'
+    ? attackingPokemon.attack
+    : attackingPokemon.special;
+const defense = move.category === 'physical'
+    ? defendingPokemon.defense
+    : defendingPokemon.special;
+let modifier = 1;
+if (attackingPokemon.types.includes(move.type)) {
+    modifier *= 1.5;
+}
+let typeEffectiveness = 1;
+for (const defType of defendingPokemon.types) {
+    const chart = typeChart[move.type];
+    if (chart && chart[defType] !== undefined) {
+        typeEffectiveness *= chart[defType];
+    }
+}
+switch (typeEffectiveness) {
+    case 4:
+        Logger.log(`It's extremely effective!`);
+        break;
+    case 2:
+        Logger.log(`It's super effective!`);
+        break;
+    case 0.5:
+        Logger.log(`It's not very effective...`);
+        break;
+    case 0.25:
+        Logger.log(`It's barely effective...`);
+        break;
+    case 0:
+        Logger.log(`It had no effect`);
+        break;
+}
+modifier *= typeEffectiveness;
+modifier *= (Math.random() * 38 + 217) / 255;
+const critChance = (attackingPokemon.baseSpeed * move.critRatio) / 512;
+if (Math.random() <= critChance) {
+    modifier *= 2;
+}
+const damage = Math.floor(((((2 * 100) / 5 + 2) * move.power * attack) / defense / 50 + 2) *
+    modifier);
+const originalHP = defendingPokemon.hp;
+defendingPokemon.hp = Math.max(0, defendingPokemon.hp - damage);
+Logger.log(`${move.name} dealt ${originalHP - defendingPokemon.hp} damage!`);
+if (move.effect && Math.random() <= move.effect.chance) {
+    const effect = move.effect;
+    const affectedPokemon = effect.affects === 'self' ? attackingPokemon : defendingPokemon;
+    function boundedValue(stage) {
+        return Math.max(-6, Math.min(6, stage));
+    }
+    function isAffectedByStatus(pokemon) {
+        return (!!pokemon.badlyPoisonedStage ||
+            !!pokemon.sleepStage ||
+            pokemon.isBurned ||
+            pokemon.isFrozen ||
+            pokemon.isParalyzed ||
+            pokemon.isPoisoned);
+    }
+    function logStatChange() {
+        Logger.log(`${affectedPokemon} had their ${effect.condition} ${effect.strength > 0 ? 'increased' : 'decreased'}${Math.abs(effect.strength) >= 2 ? ' sharply' : ''}!`);
+    }
+    switch (effect.condition) {
+        case 'attack':
+            affectedPokemon.attackStage = boundedValue(affectedPokemon.attackStage + effect.strength);
+            logStatChange();
+            break;
+        case 'defense':
+            affectedPokemon.defenseStage = boundedValue(affectedPokemon.defenseStage + effect.strength);
+            logStatChange();
+            break;
+        case 'special':
+            affectedPokemon.specialStage = boundedValue(affectedPokemon.specialStage + effect.strength);
+            logStatChange();
+            break;
+        case 'speed':
+            affectedPokemon.speedStage = boundedValue(affectedPokemon.speedStage + effect.strength);
+            logStatChange();
+            break;
+        case 'accuracy':
+            affectedPokemon.accuracyStage = boundedValue(affectedPokemon.accuracyStage + effect.strength);
+            logStatChange();
+            break;
+        case 'evasion':
+            affectedPokemon.evasionStage = boundedValue(affectedPokemon.evasionStage + effect.strength);
+            logStatChange();
+            break;
+        case 'burn':
+            if (!isAffectedByStatus(affectedPokemon)) {
+                affectedPokemon.isBurned = true;
+                Logger.log(`${affectedPokemon.name} has been burned!`);
+            }
+            break;
+        case 'freeze':
+            if (!isAffectedByStatus(affectedPokemon)) {
+                affectedPokemon.isFrozen = true;
+                Logger.log(`${affectedPokemon.name} has been frozen!`);
+            }
+            break;
+        case 'paralysis':
+            if (!isAffectedByStatus(affectedPokemon)) {
+                affectedPokemon.isParalyzed = true;
+                Logger.log(`${affectedPokemon.name} has been paralyzed!`);
+            }
+            break;
+        case 'poison':
+            if (!isAffectedByStatus(affectedPokemon)) {
+                affectedPokemon.isPoisoned = true;
+                Logger.log(`${affectedPokemon.name} has been poisoned!`);
+            }
+            break;
+        case 'badlypoisoned':
+            if (!isAffectedByStatus(affectedPokemon)) {
+                affectedPokemon.badlyPoisonedStage = 1;
+                Logger.log(`${affectedPokemon.name} has been badly poisoned!`);
+            }
+            break;
+        case 'sleep':
+            if (!isAffectedByStatus(affectedPokemon)) {
+                affectedPokemon.sleepStage = Math.floor(Math.random() * 3) + 1;
+                Logger.log(`${affectedPokemon.name} has been put to sleep!`);
+            }
+            break;
+        case 'flinch':
+            affectedPokemon.isFlinched = true;
+            break;
+        case 'drain': {
+            const originalHP = affectedPokemon.hp;
+            affectedPokemon.hp = Math.min(affectedPokemon.baseHP, affectedPokemon.hp + damage * effect.strength);
+            Logger.log(`${affectedPokemon} healed ${affectedPokemon.hp - originalHP}!`);
+            break;
+        }
+        case 'recoil': {
+            const originalHP = affectedPokemon.hp;
+            affectedPokemon.hp = Math.max(0, affectedPokemon.hp - damage * effect.strength);
+            Logger.log(`${affectedPokemon} took ${affectedPokemon.hp - originalHP} recoil damage!`);
+            break;
+        }
+    }
+}
+this.synchronizeStats();
+selectOpponentPokemon();
+Pokemon;
+{
+    const opponentValidPokemon = this.opponentTeam.filter((pokemon) => pokemon.hp >= 0);
+    const opponentValidPokemonTotal = opponentValidPokemon.length;
+    const opponentPokemonIndex = opponentValidPokemonTotal
+        ? Math.floor(Math.random() * opponentValidPokemonTotal)
+        : -1;
+    return opponentPokemonIndex >= 0
+        ? this.opponentTeam[opponentPokemonIndex]
+        : this.opponentTeam[0];
+}
+synchronizeStats();
+void {
+    const: stageMultiplier = [
+        1 / 3,
+        3 / 8,
+        3 / 7,
+        0.5,
+        3 / 5,
+        3 / 4,
+        1,
+        4 / 3,
+        5 / 3,
+        2,
+        7 / 3,
+        8 / 3,
+        3,
+    ],
+    // Index 0 = -6, ..., Index 6 = 0, ..., Index 12 = +6
+    [this.playerActivePokemon, this.opponentActivePokemon]: .forEach((pokemon) => {
+        const getStage = (stage) => stageMultiplier[stage + 6];
+        pokemon.attack = Math.floor(pokemon.baseAttack * getStage(pokemon.attackStage));
+        pokemon.defense = Math.floor(pokemon.baseDefense * getStage(pokemon.defenseStage));
+        pokemon.special = Math.floor(pokemon.baseSpecial * getStage(pokemon.specialStage));
+        pokemon.speed = Math.floor(pokemon.baseSpeed * getStage(pokemon.speedStage));
+        pokemon.accuracy = getStage(pokemon.accuracyStage);
+        pokemon.evasion = getStage(pokemon.evasionStage);
+    })
+};
 //# sourceMappingURL=BattleEngine.js.map
