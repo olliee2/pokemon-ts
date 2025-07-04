@@ -229,6 +229,10 @@ export default class BattleEngine {
                     break;
                 case 'drain':
                     affectedPokemon.hp = Math.min(affectedPokemon.baseHP, affectedPokemon.hp + damage * effect.strength);
+                    break;
+                case 'recoil':
+                    affectedPokemon.hp = Math.max(0, affectedPokemon.hp - damage * effect.strength);
+                    break;
             }
         }
     }

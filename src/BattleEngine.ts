@@ -310,6 +310,13 @@ export default class BattleEngine {
             affectedPokemon.baseHP,
             affectedPokemon.hp + damage * effect.strength,
           );
+          break;
+        case 'recoil':
+          affectedPokemon.hp = Math.max(
+            0,
+            affectedPokemon.hp - damage * effect.strength,
+          );
+          break;
       }
     }
   }
