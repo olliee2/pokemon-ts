@@ -44,9 +44,13 @@ export default class BattleEngine {
                 return undefined;
             }
             if (this.playerActivePokemon.hp <= 0) {
+                Logger.log(`Your ${this.playerActivePokemon.name} fainted!`);
                 if (this.playerTeam.some((pokemon) => pokemon.hp)) {
+                    Logger.log('Choose a new Pokémon to send out.');
                     return 'Pokemon Select';
                 }
+                Logger.log('You ran out of Pokémon.');
+                Logger.log('The opponent won!');
                 return 'Opponent Win';
             }
             return undefined;

@@ -1,4 +1,5 @@
 import BattleEngine from './BattleEngine';
+import Logger from './Logger';
 
 type Menu = 'main' | 'move' | 'switch' | 'forcedSwitch';
 
@@ -190,9 +191,12 @@ export default class Renderer {
       selectedPokemon !== this.engine.playerActivePokemon
     ) {
       this.engine.playerActivePokemon = selectedPokemon;
+      Logger.log(`You sent out ${selectedPokemon.name}!`);
       const result = this.engine.selectMove(undefined);
       this.handleResult(result);
       this.render();
+    } else {
+      Logger.log(`${selectedPokemon.name} is invalid to send out.`);
     }
   }
 }
