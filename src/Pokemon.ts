@@ -16,8 +16,23 @@ export default class Pokemon {
   public defense;
   public special;
   public speed;
-  public accuracy;
-  public evasion;
+  public accuracy = 1;
+  public evasion = 1;
+
+  public attackStage = 0;
+  public defenseStage = 0;
+  public specialStage = 0;
+  public speedStage = 0;
+  public accuracyStage = 0;
+  public evasionStage = 0;
+  public badlyPoisonedStage = 0;
+  public sleepStage = 0;
+
+  public isBurned = false;
+  public isFrozen = false;
+  public isParalyzed = false;
+  public isPoisoned = false;
+  public isFlinched = false;
 
   constructor(pokemonData: PokemonData) {
     this.name = pokemonData.name;
@@ -27,15 +42,15 @@ export default class Pokemon {
     this.baseDefense = pokemonData.defense;
     this.baseSpecial = pokemonData.special;
     this.baseSpeed = pokemonData.speed;
-    this.moves = pokemonData.moves.map((move) => moveData[move]);
+    this.moves = pokemonData.moves.map((move) =>
+      structuredClone(moveData[move]),
+    );
 
     this.hp = this.baseHP;
     this.attack = this.baseAttack;
     this.defense = this.baseDefense;
     this.special = this.baseSpecial;
     this.speed = this.baseSpeed;
-    this.accuracy = 1;
-    this.evasion = 1;
   }
 
   log(): void {

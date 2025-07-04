@@ -11,8 +11,8 @@ export class Move {
   public effect?: {
     condition: Condition;
     affects: 'self' | 'target';
-    strength?: number;
-    chance?: number;
+    strength: number;
+    chance: number;
   };
   public priority: number;
   public critRatio: number;

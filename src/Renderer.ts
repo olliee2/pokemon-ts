@@ -49,6 +49,20 @@ export default class Renderer {
     this.switchBackButton.addEventListener('click', () => {
       this.changeMenu('main');
     });
+
+    this.move1Button.addEventListener('click', () => {
+      this.useMove(0);
+    });
+
+    this.move2Button.addEventListener('click', () => {
+      this.useMove(1);
+    });
+    this.move3Button.addEventListener('click', () => {
+      this.useMove(2);
+    });
+    this.move4Button.addEventListener('click', () => {
+      this.useMove(3);
+    });
   }
 
   render(): void {
@@ -104,6 +118,17 @@ export default class Renderer {
     this.opponentHP.textContent = `HP: ${opponentPokemon.hp}/${opponentPokemon.baseHP}`;
     this.opponentHPBar.value = opponentPokemon.hp / opponentPokemon.baseHP;
     this.opponentImage.src = `assets/front/${opponentPokemon.name}.png`;
+  }
+
+  useMove(moveIndex: number): void {
+    const moves = this.engine.playerActivePokemon.moves;
+    if (!moves.some((move) => move.pp)) {
+      this.engine.selectMove(-1);
+    } else if (moves[moveIndex].pp) {
+      this.engine.selectMove(moveIndex);
+      this.changeMenu('main');
+      this.render();
+    }
   }
 
   log(): void {
