@@ -166,10 +166,8 @@ export default class Renderer {
         const selectedPokemon = this.engine.playerTeam[pokemonIndex];
         if (selectedPokemon.hp > 0 &&
             selectedPokemon !== this.engine.playerActivePokemon) {
-            this.engine.playerActivePokemon = selectedPokemon;
-            Logger.log(`You sent out ${selectedPokemon.name}!`);
-            const result = this.engine.selectMove(undefined);
-            this.handleResult(result);
+            this.engine.switchPokemon(pokemonIndex);
+            this.changeMenu('main');
             this.render();
         }
         else {

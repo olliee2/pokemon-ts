@@ -79,6 +79,14 @@ export default class BattleEngine {
         }
         return undefined;
     }
+    switchPokemon(pokemonIndex) {
+        const selectedPokemon = this.playerTeam[pokemonIndex];
+        if (selectedPokemon.hp > 0 &&
+            selectedPokemon !== this.playerActivePokemon) {
+            this.playerActivePokemon = selectedPokemon;
+            Logger.log(`You sent out ${selectedPokemon.name}!`);
+        }
+    }
     selectOpponentMove() {
         const opponentValidMoves = this.opponentActivePokemon.moves.filter((move) => move.pp);
         const opponentValidMovesTotal = opponentValidMoves.length;
@@ -167,7 +175,7 @@ export default class BattleEngine {
         }
         const damage = Math.floor(((42 * move.power * attack) / defense / 50 + 2) * modifier);
         const originalHP = defendingPokemon.hp;
-        defendingPokemon.hp = Math.floor(Math.max(0, defendingPokemon.hp - damage));
+        defendingPokemon.hp = Math.max(0, defendingPokemon.hp - damage);
         Logger.log(`${move.name} dealt ${originalHP - defendingPokemon.hp} damage!`);
         if (move.effect && Math.random() <= move.effect.chance) {
             const effect = move.effect;
@@ -184,7 +192,7 @@ export default class BattleEngine {
                     pokemon.isPoisoned);
             }
             function logStatChange() {
-                Logger.log(`${affectedPokemon} had their ${effect.condition} ${effect.strength > 0 ? 'increased' : 'decreased'}${Math.abs(effect.strength) >= 2 ? ' sharply' : ''}!`);
+                Logger.log(`${affectedPokemon.name} had their ${effect.condition} ${effect.strength > 0 ? 'increased' : 'decreased'}${Math.abs(effect.strength) >= 2 ? ' sharply' : ''}!`);
             }
             switch (effect.condition) {
                 case 'attack':

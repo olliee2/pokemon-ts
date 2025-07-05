@@ -15,46 +15,74 @@
     <h1>Pokémon Brew</h1>
 </header>
 <main id="main">
-    <div id="pokemon-containers">
-        <div class="pokemon-container" id="player-container">
-            <span class="pokemon-name" id="player-name"></span>
-            <span class="pokemon-status" id="player-status"></span>
-            <label class="pokemon-hp" for="player-hp-bar" id="player-hp">HP:</label>
-            <progress class="pokemon-hp-bar" id="player-hp-bar" max="1" value="1"></progress>
-            <!--suppress RequiredAttributes -->
-            <img alt="Player Pokémon" class="pokemon-image" id="player-image">
+    <!-- Team Builder Screen -->
+    <div id="team-builder">
+        <h2>Build Your Team</h2>
+        <div id="selected-team">
+            <h3>Your Team (<span id="team-count">0</span>/6)</h3>
+            <div id="selected-pokemon">
+                <div class="selected-slot" id="slot-1">Empty</div>
+                <div class="selected-slot" id="slot-2">Empty</div>
+                <div class="selected-slot" id="slot-3">Empty</div>
+                <div class="selected-slot" id="slot-4">Empty</div>
+                <div class="selected-slot" id="slot-5">Empty</div>
+                <div class="selected-slot" id="slot-6">Empty</div>
+            </div>
         </div>
-        <div class="pokemon-container" id="opponent-pokemon-container">
-            <span class="pokemon-name" id="opponent-name"></span>
-            <span class="pokemon-status" id="opponent-status"></span>
-            <label class="pokemon-hp" for="opponent-hp-bar" id="opponent-hp">HP:</label>
-            <progress class="pokemon-hp-bar" id="opponent-hp-bar" max="1" value="1"></progress>
-            <!--suppress RequiredAttributes -->
-            <img alt="Opponent Pokémon" class="pokemon-image" id="opponent-image">
+        <div id="pokemon-selection">
+            <h3>Available Pokémon</h3>
+            <div id="pokemon-grid"></div>
+        </div>
+        <div id="team-builder-actions">
+            <button disabled id="start-battle-button">Start Battle</button>
+            <button id="random-team-button">Random Team</button>
+            <button id="clear-team-button">Clear Team</button>
         </div>
     </div>
-    <div id="main-buttons">
-        <button id="move-button">Battle</button>
-        <button id="switch-button">Pokémon</button>
+
+    <!-- Battle Screen -->
+    <div class="hidden" id="battle-screen">
+        <div id="pokemon-containers">
+            <div class="pokemon-container" id="player-container">
+                <span class="pokemon-name" id="player-name"></span>
+                <span class="pokemon-status" id="player-status"></span>
+                <label class="pokemon-hp" for="player-hp-bar" id="player-hp">HP:</label>
+                <progress class="pokemon-hp-bar" id="player-hp-bar" max="1" value="1"></progress>
+                <!--suppress RequiredAttributes -->
+                <img alt="Player Pokémon" class="pokemon-image" id="player-image">
+            </div>
+            <div class="pokemon-container" id="opponent-pokemon-container">
+                <span class="pokemon-name" id="opponent-name"></span>
+                <span class="pokemon-status" id="opponent-status"></span>
+                <label class="pokemon-hp" for="opponent-hp-bar" id="opponent-hp">HP:</label>
+                <progress class="pokemon-hp-bar" id="opponent-hp-bar" max="1" value="1"></progress>
+                <!--suppress RequiredAttributes -->
+                <img alt="Opponent Pokémon" class="pokemon-image" id="opponent-image">
+            </div>
+        </div>
+        <div id="main-buttons">
+            <button id="move-button">Battle</button>
+            <button id="switch-button">Pokémon</button>
+        </div>
+        <div class="hidden" id="move-buttons">
+            <button id="move-1-button">Move1</button>
+            <button id="move-2-button">Move2</button>
+            <button id="move-3-button">Move3</button>
+            <button id="move-4-button">Move4</button>
+            <button id="move-back-button">Back</button>
+        </div>
+        <div class="hidden" id="switch-buttons">
+            <button id="switch-1-button">Switch1</button>
+            <button id="switch-2-button">Switch2</button>
+            <button id="switch-3-button">Switch3</button>
+            <button id="switch-4-button">Switch4</button>
+            <button id="switch-5-button">Switch5</button>
+            <button id="switch-6-button">Switch6</button>
+            <button id="switch-back-button">Back</button>
+        </div>
+        <ol id="battle-log">
+        </ol>
     </div>
-    <div class="hidden" id="move-buttons">
-        <button id="move-1-button">Move1</button>
-        <button id="move-2-button">Move2</button>
-        <button id="move-3-button">Move3</button>
-        <button id="move-4-button">Move4</button>
-        <button id="move-back-button">Back</button>
-    </div>
-    <div class="hidden" id="switch-buttons">
-        <button id="switch-1-button">Switch1</button>
-        <button id="switch-2-button">Switch2</button>
-        <button id="switch-3-button">Switch3</button>
-        <button id="switch-4-button">Switch4</button>
-        <button id="switch-5-button">Switch5</button>
-        <button id="switch-6-button">Switch6</button>
-        <button id="switch-back-button">Back</button>
-    </div>
-    <ol id="battle-log">
-    </ol>
 </main>
 <script src="dist/index.js" type="module"></script>
 </body>
