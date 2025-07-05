@@ -51,6 +51,7 @@ export default class BattleEngine {
             playerMove,
           ];
 
+    Logger.newTurn();
     this.useMove(firstPokemon, secondPokemon, firstMove);
     const result = this.checkBattleState();
     if (result) return result;
@@ -94,20 +95,25 @@ export default class BattleEngine {
     if (this.opponentActivePokemon.hp <= 0) {
       this.opponentActivePokemon.hp = 0;
       Logger.log(`The opponent's ${this.opponentActivePokemon.name} fainted!`);
-      this.opponentActivePokemon = this.selectOpponentPokemon();
-      if (this.opponentActivePokemon.hp <= 0) {
-        this.opponentActivePokemon.hp = 0;
+
+      const opponentValidPokemon = this.opponentTeam.filter(
+        (pokemon) => pokemon.hp > 0,
+      );
+
+      if (opponentValidPokemon.length === 0) {
         Logger.log('The opponent ran out of Pokémon.');
         Logger.log('You win!');
         return 'Player Win';
       }
+
+      this.opponentActivePokemon = this.selectOpponentPokemon();
       Logger.log(`The opponent sent out ${this.opponentActivePokemon.name}!`);
       return undefined;
     }
     if (this.playerActivePokemon.hp <= 0) {
       this.playerActivePokemon.hp = 0;
       Logger.log(`Your ${this.playerActivePokemon.name} fainted!`);
-      if (this.playerTeam.some((pokemon) => pokemon.hp)) {
+      if (this.playerTeam.some((pokemon) => pokemon.hp > 0)) {
         Logger.log('Choose a new Pokémon to send out.');
         return 'Pokemon Select';
       }

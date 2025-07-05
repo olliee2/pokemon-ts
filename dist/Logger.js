@@ -19,9 +19,16 @@ export default class Logger {
             this.list.scrollTop + 1;
         const li = document.createElement('li');
         li.textContent = message;
+        li.className = 'current-log';
         Logger.list.append(li);
         if (isScrolledToBottom) {
             this.list.scrollTop = this.list.scrollHeight - this.list.clientHeight;
+        }
+    }
+    static newTurn() {
+        const logs = document.getElementsByClassName('current-log');
+        for (let i = logs.length - 1; i >= 0; i--) {
+            logs[i].classList.remove('current-log');
         }
     }
 }

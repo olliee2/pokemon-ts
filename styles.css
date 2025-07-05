@@ -56,6 +56,7 @@ h1 {
     appearance: none;
     overflow: hidden;
     box-shadow: 0 1px 4px rgba(44, 62, 80, 0.10);
+    transition: all 0.8s ease-in-out;
 }
 
 .pokemon-hp-bar::-webkit-progress-bar {
@@ -113,12 +114,16 @@ button {
     border-radius: 8px;
     padding: 0.7rem 1.5rem;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+    transition: all 0.2s ease;
 }
 
 button:hover, button:focus {
     background: #b71c1c;
     transform: translateY(-2px) scale(1.04);
+}
+
+button:active {
+    transform: translateY(1px) scale(0.98);
 }
 
 #battle-log {
@@ -137,15 +142,14 @@ button:hover, button:focus {
     padding: 0.5rem 1rem;
     border-bottom: 1px solid #eee;
     color: #333;
+    animation: log-entry-slide 0.4s ease-out;
 }
 
-#battle-log li:last-child {
-    border-bottom: none;
+.current-log {
     background: #fffde7;
     font-weight: bold;
 }
 
-/* Team Builder Styles */
 #team-builder {
     padding: 2rem;
 }
@@ -291,4 +295,151 @@ button:hover, button:focus {
 
 #clear-team-button:hover {
     background: #d32f2f;
+}
+
+/* Animation classes */
+.pokemon-attack {
+    animation: attack-shake 0.6s ease-in-out;
+}
+
+.pokemon-damage {
+    animation: damage-flash 0.8s ease-in-out;
+}
+
+.pokemon-heal {
+    animation: heal-glow 1s ease-in-out;
+}
+
+.pokemon-faint {
+    animation: faint-slide 1.2s ease-in-out forwards;
+}
+
+.pokemon-switch-in {
+    animation: switch-in 0.8s ease-out;
+}
+
+.pokemon-switch-out {
+    animation: switch-out 0.6s ease-in forwards;
+}
+
+.status-effect {
+    animation: status-pulse 2s ease-in-out infinite;
+}
+
+.move-text {
+    animation: move-announce 2s ease-in-out;
+}
+
+.hp-bar-animate {
+    transition: value 1s ease-in-out;
+}
+
+/* Keyframe animations */
+@keyframes attack-shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-8px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(8px);
+    }
+}
+
+@keyframes damage-flash {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    25% {
+        filter: brightness(1.8) hue-rotate(20deg);
+    }
+    50% {
+        filter: brightness(0.6) hue-rotate(-10deg);
+    }
+    75% {
+        filter: brightness(1.4) hue-rotate(15deg);
+    }
+}
+
+@keyframes heal-glow {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.4) hue-rotate(90deg);
+    }
+}
+
+@keyframes faint-slide {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(20px) rotate(-15deg);
+        opacity: 0.3;
+    }
+}
+
+@keyframes switch-in {
+    0% {
+        transform: scale(0.5) translateY(-50px);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes switch-out {
+    0% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.5) translateY(-50px);
+        opacity: 0;
+    }
+}
+
+@keyframes status-pulse {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.2) hue-rotate(180deg);
+    }
+}
+
+@keyframes move-announce {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    25% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    75% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Battle log entry animation */
+@keyframes log-entry-slide {
+    0% {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }

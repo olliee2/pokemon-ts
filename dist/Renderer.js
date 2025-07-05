@@ -1,6 +1,6 @@
 import Logger from './Logger.js';
 export default class Renderer {
-    constructor(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton) {
+    constructor(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton, playerStatus, opponentStatus) {
         this.engine = engine;
         this.playerName = playerName;
         this.playerHP = playerHP;
@@ -27,6 +27,9 @@ export default class Renderer {
         this.switch5Button = switch5Button;
         this.switch6Button = switch6Button;
         this.switchBackButton = switchBackButton;
+        this.playerStatus = playerStatus;
+        this.opponentStatus = opponentStatus;
+        this.isAnimating = false;
         this.setupEventListeners();
         this.render();
     }
@@ -121,26 +124,41 @@ export default class Renderer {
         this.playerHP.textContent = `HP: ${playerPokemon.hp}/${playerPokemon.baseHP}`;
         this.playerHPBar.value = playerPokemon.hp / playerPokemon.baseHP;
         this.playerImage.src = `assets/back/${playerPokemon.name}.png`;
+        this.playerStatus.textContent = this.getPokemonStatus(playerPokemon);
         const opponentPokemon = this.engine.opponentActivePokemon;
         this.opponentName.textContent = opponentPokemon.name;
         this.opponentHP.textContent = `HP: ${opponentPokemon.hp}/${opponentPokemon.baseHP}`;
         this.opponentHPBar.value = opponentPokemon.hp / opponentPokemon.baseHP;
         this.opponentImage.src = `assets/front/${opponentPokemon.name}.png`;
+        this.opponentStatus.textContent = this.getPokemonStatus(opponentPokemon);
     }
-    useMove(moveIndex) {
-        if (this.engine.playerActivePokemon.hp > 0) {
-            const moves = this.engine.playerActivePokemon.moves;
-            const moveToUse = !moves.some((move) => move.pp)
-                ? -1
-                : moves[moveIndex].pp
-                    ? moveIndex
-                    : undefined;
-            if (moveToUse !== undefined) {
-                const result = this.engine.selectMove(moveToUse);
-                this.handleResult(result);
-                this.render();
-            }
+    async useMove(moveIndex) {
+        if (this.isAnimating || this.engine.playerActivePokemon.hp <= 0)
+            return;
+        this.isAnimating = true;
+        this.disableAllButtons();
+        const moves = this.engine.playerActivePokemon.moves;
+        const moveToUse = !moves.some((move) => move.pp)
+            ? -1
+            : moves[moveIndex].pp
+                ? moveIndex
+                : undefined;
+        if (moveToUse !== undefined) {
+            const playerPokemonBefore = {
+                pokemon: this.engine.playerActivePokemon,
+                hp: this.engine.playerActivePokemon.hp,
+            };
+            const opponentPokemonBefore = {
+                pokemon: this.engine.opponentActivePokemon,
+                hp: this.engine.opponentActivePokemon.hp,
+            };
+            const result = this.engine.selectMove(moveToUse);
+            await this.animateBattleSequence(playerPokemonBefore, opponentPokemonBefore, result);
+            this.handleResult(result);
+            this.render();
         }
+        this.isAnimating = false;
+        this.enableAllButtons();
     }
     handleResult(result) {
         switch (result) {
@@ -162,12 +180,161 @@ export default class Renderer {
             }
         }
     }
-    switchPokemon(pokemonIndex) {
+    getPokemonStatus(pokemon) {
+        if (pokemon.isBurned)
+            return 'Burned';
+        if (pokemon.isPoisoned)
+            return 'Poisoned';
+        if (pokemon.badlyPoisonedStage)
+            return 'Badly Poisoned';
+        if (pokemon.isFrozen)
+            return 'Frozen';
+        if (pokemon.isParalyzed)
+            return 'Paralyzed';
+        if (pokemon.sleepStage)
+            return 'Asleep';
+        return 'Healthy';
+    }
+    async animateBattleSequence(playerBefore, opponentBefore, result) {
+        const battleEndedEarly = result === 'Pokemon Select' ||
+            result === 'Player Win' ||
+            result === 'Opponent Win';
+        await this.animateAttack(this.playerImage);
+        await this.sleep(200);
+        if (this.engine.opponentActivePokemon.hp < opponentBefore.hp ||
+            (battleEndedEarly &&
+                opponentBefore.pokemon === this.engine.opponentActivePokemon)) {
+            await this.animateDamage(this.opponentImage);
+            await this.animateHPChange(this.opponentHPBar, this.opponentHP, this.engine.opponentActivePokemon);
+        }
+        if (this.engine.opponentActivePokemon.hp <= 0) {
+            await this.animateFaint(this.opponentImage);
+            await this.sleep(500);
+            if (this.engine.opponentActivePokemon.hp > 0) {
+                await this.animateSwitchIn(this.opponentImage);
+            }
+            if (battleEndedEarly) {
+                return;
+            }
+        }
+        if (this.engine.opponentActivePokemon.hp > 0 && !battleEndedEarly) {
+            await this.sleep(800);
+            await this.animateAttack(this.opponentImage);
+            await this.sleep(200);
+            if (this.engine.playerActivePokemon.hp < playerBefore.hp) {
+                await this.animateDamage(this.playerImage);
+                await this.animateHPChange(this.playerHPBar, this.playerHP, this.engine.playerActivePokemon);
+            }
+            if (this.engine.playerActivePokemon.hp <= 0) {
+                await this.animateFaint(this.playerImage);
+                await this.sleep(500);
+            }
+        }
+    }
+    async animateAttack(image) {
+        return new Promise((resolve) => {
+            image.classList.add('pokemon-attack');
+            setTimeout(() => {
+                image.classList.remove('pokemon-attack');
+                resolve();
+            }, 600);
+        });
+    }
+    async animateDamage(image) {
+        return new Promise((resolve) => {
+            image.classList.add('pokemon-damage');
+            setTimeout(() => {
+                image.classList.remove('pokemon-damage');
+                resolve();
+            }, 800);
+        });
+    }
+    async animateHPChange(hpBar, hpText, pokemon) {
+        return new Promise((resolve) => {
+            const targetValue = pokemon.hp / pokemon.baseHP;
+            hpBar.classList.add('hp-bar-animate');
+            hpBar.value = targetValue;
+            hpText.textContent = `HP: ${pokemon.hp}/${pokemon.baseHP}`;
+            setTimeout(() => {
+                hpBar.classList.remove('hp-bar-animate');
+                resolve();
+            }, 800);
+        });
+    }
+    async animateFaint(image) {
+        return new Promise((resolve) => {
+            image.classList.add('pokemon-faint');
+            setTimeout(() => {
+                image.classList.remove('pokemon-faint');
+                resolve();
+            }, 1200);
+        });
+    }
+    async animateSwitchIn(image) {
+        return new Promise((resolve) => {
+            image.classList.add('pokemon-switch-in');
+            setTimeout(() => {
+                image.classList.remove('pokemon-switch-in');
+                resolve();
+            }, 800);
+        });
+    }
+    async animateSwitchOut(image) {
+        return new Promise((resolve) => {
+            image.classList.add('pokemon-switch-out');
+            setTimeout(() => {
+                image.classList.remove('pokemon-switch-out');
+                resolve();
+            }, 600);
+        });
+    }
+    sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    disableAllButtons() {
+        [
+            this.moveButton,
+            this.switchButton,
+            this.move1Button,
+            this.move2Button,
+            this.move3Button,
+            this.move4Button,
+            this.moveBackButton,
+            this.switch1Button,
+            this.switch2Button,
+            this.switch3Button,
+            this.switch4Button,
+            this.switch5Button,
+            this.switch6Button,
+            this.switchBackButton,
+        ].forEach((button) => (button.disabled = true));
+    }
+    enableAllButtons() {
+        [
+            this.moveButton,
+            this.switchButton,
+            this.move1Button,
+            this.move2Button,
+            this.move3Button,
+            this.move4Button,
+            this.moveBackButton,
+            this.switch1Button,
+            this.switch2Button,
+            this.switch3Button,
+            this.switch4Button,
+            this.switch5Button,
+            this.switch6Button,
+            this.switchBackButton,
+        ].forEach((button) => (button.disabled = false));
+    }
+    async switchPokemon(pokemonIndex) {
         const selectedPokemon = this.engine.playerTeam[pokemonIndex];
         if (selectedPokemon.hp > 0 &&
             selectedPokemon !== this.engine.playerActivePokemon) {
+            await this.animateSwitchOut(this.playerImage);
             this.engine.switchPokemon(pokemonIndex);
             this.changeMenu('main');
+            await this.animateSwitchIn(this.playerImage);
             this.render();
         }
         else {

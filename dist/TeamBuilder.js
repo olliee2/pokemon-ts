@@ -132,7 +132,6 @@ export default class TeamBuilder {
         this.battleScreenElement.classList.remove('hidden');
         const battleLog = document.getElementById('battle-log');
         Logger.getInstance(battleLog);
-        Logger.log('Battle Starting...');
         const engine = new BattleEngine(playerTeam, opponentTeam);
         const playerName = document.getElementById('player-name');
         const playerHP = document.getElementById('player-hp');
@@ -159,7 +158,9 @@ export default class TeamBuilder {
         const switch5Button = document.getElementById('switch-5-button');
         const switch6Button = document.getElementById('switch-6-button');
         const switchBackButton = document.getElementById('switch-back-button');
-        const renderer = new Renderer(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton);
+        const playerStatus = document.getElementById('player-status');
+        const opponentStatus = document.getElementById('opponent-status');
+        const renderer = new Renderer(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton, playerStatus, opponentStatus);
         void renderer;
     }
 }
