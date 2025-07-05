@@ -107,7 +107,10 @@ export default class BattleEngine {
         return 'Player Win';
       }
 
-      this.opponentActivePokemon = this.selectOpponentPokemon();
+      this.opponentActivePokemon =
+        opponentValidPokemon[
+          Math.floor(Math.random() * opponentValidPokemon.length)
+        ];
       Logger.log(`The opponent sent out ${this.opponentActivePokemon.name}!`);
       return undefined;
     }
@@ -189,6 +192,15 @@ export default class BattleEngine {
 
     this.synchronizeStats();
 
+    if (move.pp <= 0) {
+      Logger.log(
+        `${attackingPokemon.name} tried to use ${move.name}, but it has no PP left!`,
+      );
+      return;
+    }
+
+    move.pp -= 1;
+
     if (attackingPokemon.isFrozen) {
       Logger.log(`${attackingPokemon.name} is frozen!`);
       return;
@@ -199,6 +211,7 @@ export default class BattleEngine {
     }
     if (attackingPokemon.isParalyzed && Math.random() < 0.25) {
       Logger.log(`${attackingPokemon.name} is paralyzed and cannot move!`);
+      return;
     }
 
     Logger.log(

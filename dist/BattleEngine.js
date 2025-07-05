@@ -62,7 +62,8 @@ export default class BattleEngine {
                 Logger.log('You win!');
                 return 'Player Win';
             }
-            this.opponentActivePokemon = this.selectOpponentPokemon();
+            this.opponentActivePokemon =
+                opponentValidPokemon[Math.floor(Math.random() * opponentValidPokemon.length)];
             Logger.log(`The opponent sent out ${this.opponentActivePokemon.name}!`);
             return undefined;
         }
@@ -126,6 +127,11 @@ export default class BattleEngine {
         if (move === undefined)
             return;
         this.synchronizeStats();
+        if (move.pp <= 0) {
+            Logger.log(`${attackingPokemon.name} tried to use ${move.name}, but it has no PP left!`);
+            return;
+        }
+        move.pp -= 1;
         if (attackingPokemon.isFrozen) {
             Logger.log(`${attackingPokemon.name} is frozen!`);
             return;
@@ -136,6 +142,7 @@ export default class BattleEngine {
         }
         if (attackingPokemon.isParalyzed && Math.random() < 0.25) {
             Logger.log(`${attackingPokemon.name} is paralyzed and cannot move!`);
+            return;
         }
         Logger.log(`${attackingPokemon.name} used ${move.name} on ${defendingPokemon.name}!`);
         const hitChance = (move.accuracy * attackingPokemon.accuracy) / defendingPokemon.evasion;

@@ -1,24 +1,34 @@
-# Pokemon TS
+# Pokemon Brew
 
-## Project Structure
+## About
 
-### src
+An online battle simulator for the first generation of Pokémon! Playable
+at [https://olliee2.itch.io/pokemon-brew](https://olliee2.itch.io/pokemon-brew).
 
-Contains Typescript code.
+## Usage & Hosting
 
-### assets
+### Local Development
 
-Contains miscellaneous assets required for function.
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/olliee2/pokemon-ts.git
+   cd pokemon-ts
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+3. Build and run the project:
+   ```sh
+   npm run start
+   ```
+   This will start a local server on which you can play in your browser.
 
-### dist
+### Deploying to Cloudflare Pages
 
-Contains the compiled JavaScript that is then ran.
+1. Push your repository to GitHub (or another git provider).
+2. Go to [Cloudflare Pages](https://pages.cloudflare.com/) and create a new project from your repository.
+3. Set the build command to `npm run build`.
+4. Deploy!
 
-## Supported Pokémon
-
-All fully evolved Generation 1 Pokémon.
-
-More to be added later!
-
-hosted on cloudflare pages at
-https://pokemon-ts.pages.dev
+The game will be available at your Cloudflare Pages URL.
