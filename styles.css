@@ -25,13 +25,13 @@ h1 {
     display: none;
 }
 
-#battle-log {
-    list-style: none;
-}
 
 #pokemon-containers {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2rem;
 }
 
 .pokemon-container {
@@ -40,6 +40,47 @@ h1 {
     margin: auto;
     width: 25vw;
 }
+
+.pokemon-status {
+    font-size: 1rem;
+    color: #1976d2;
+    margin-bottom: 0.5rem;
+}
+
+.pokemon-hp-bar {
+    width: 90%;
+    height: 1.2rem;
+    border-radius: 8px;
+    background: #eee;
+    margin-bottom: 0.7rem;
+    appearance: none;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(44, 62, 80, 0.10);
+}
+
+.pokemon-hp-bar::-webkit-progress-bar {
+    background-color: #eee;
+    border-radius: 8px;
+}
+
+.pokemon-hp-bar::-webkit-progress-value {
+    background: linear-gradient(90deg, #66bb6a 0%, #ffa726 80%, #d32f2f 100%);
+    border-radius: 8px;
+}
+
+.pokemon-hp-bar::-moz-progress-bar {
+    background: linear-gradient(90deg, #66bb6a 0%, #ffa726 80%, #d32f2f 100%);
+    border-radius: 8px;
+}
+
+.pokemon-hp-bar[value="1"]::-webkit-progress-value {
+    background: #66bb6a;
+}
+
+.pokemon-hp-bar[value="0"]::-webkit-progress-value {
+    background: #d32f2f;
+}
+
 
 .pokemon-image {
     image-rendering: crisp-edges;
