@@ -16,7 +16,6 @@ const slotElements = [
     document.getElementById('slot-5'),
     document.getElementById('slot-6'),
 ];
-// Initialize TeamBuilder
 const teamBuilder = new TeamBuilder(teamBuilderElement, battleScreenElement, teamCountElement, pokemonGridElement, startBattleButton, randomTeamButton, clearTeamButton, slotElements);
-teamBuilder;
+void teamBuilder;
 //# sourceMappingURL=index.js.map

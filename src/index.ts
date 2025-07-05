@@ -25,7 +25,6 @@ const slotElements = [
   document.getElementById('slot-6')!,
 ];
 
-// Initialize TeamBuilder
 const teamBuilder = new TeamBuilder(
   teamBuilderElement,
   battleScreenElement,
@@ -36,4 +35,5 @@ const teamBuilder = new TeamBuilder(
   clearTeamButton,
   slotElements,
 );
-teamBuilder;
+
+void teamBuilder;
