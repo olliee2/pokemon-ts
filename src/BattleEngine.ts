@@ -234,7 +234,7 @@ export default class BattleEngine {
 
     const originalHP = defendingPokemon.hp;
 
-    defendingPokemon.hp = Math.max(0, defendingPokemon.hp - damage);
+    defendingPokemon.hp = Math.floor(Math.max(0, defendingPokemon.hp - damage));
 
     Logger.log(
       `${move.name} dealt ${originalHP - defendingPokemon.hp} damage!`,
@@ -344,9 +344,11 @@ export default class BattleEngine {
           break;
         case 'drain': {
           const originalHP = affectedPokemon.hp;
-          affectedPokemon.hp = Math.min(
-            affectedPokemon.baseHP,
-            affectedPokemon.hp + damage * effect.strength,
+          affectedPokemon.hp = Math.floor(
+            Math.min(
+              affectedPokemon.baseHP,
+              affectedPokemon.hp + damage * effect.strength,
+            ),
           );
           Logger.log(
             `${affectedPokemon} healed ${affectedPokemon.hp - originalHP}!`,
@@ -355,9 +357,8 @@ export default class BattleEngine {
         }
         case 'recoil': {
           const originalHP = affectedPokemon.hp;
-          affectedPokemon.hp = Math.max(
-            0,
-            affectedPokemon.hp - damage * effect.strength,
+          affectedPokemon.hp = Math.floor(
+            Math.max(0, affectedPokemon.hp - damage * effect.strength),
           );
           Logger.log(
             `${affectedPokemon.name} took ${originalHP - affectedPokemon.hp} recoil damage!`,

@@ -167,7 +167,7 @@ export default class BattleEngine {
         }
         const damage = Math.floor(((42 * move.power * attack) / defense / 50 + 2) * modifier);
         const originalHP = defendingPokemon.hp;
-        defendingPokemon.hp = Math.max(0, defendingPokemon.hp - damage);
+        defendingPokemon.hp = Math.floor(Math.max(0, defendingPokemon.hp - damage));
         Logger.log(`${move.name} dealt ${originalHP - defendingPokemon.hp} damage!`);
         if (move.effect && Math.random() <= move.effect.chance) {
             const effect = move.effect;
@@ -252,13 +252,13 @@ export default class BattleEngine {
                     break;
                 case 'drain': {
                     const originalHP = affectedPokemon.hp;
-                    affectedPokemon.hp = Math.min(affectedPokemon.baseHP, affectedPokemon.hp + damage * effect.strength);
+                    affectedPokemon.hp = Math.floor(Math.min(affectedPokemon.baseHP, affectedPokemon.hp + damage * effect.strength));
                     Logger.log(`${affectedPokemon} healed ${affectedPokemon.hp - originalHP}!`);
                     break;
                 }
                 case 'recoil': {
                     const originalHP = affectedPokemon.hp;
-                    affectedPokemon.hp = Math.max(0, affectedPokemon.hp - damage * effect.strength);
+                    affectedPokemon.hp = Math.floor(Math.max(0, affectedPokemon.hp - damage * effect.strength));
                     Logger.log(`${affectedPokemon.name} took ${originalHP - affectedPokemon.hp} recoil damage!`);
                     break;
                 }
