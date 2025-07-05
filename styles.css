@@ -1,6 +1,6 @@
 body {
-    background-color: #aa9ba1;
-    color: #181616;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #222;
 }
 
 .hidden {
@@ -14,11 +14,9 @@ body {
 #pokemon-containers {
     display: flex;
     flex-direction: row;
-    border: 1px solid yellow;
 }
 
 .pokemon-container {
-    border: 1px solid red;
     display: flex;
     flex-direction: column;
     margin: auto;
@@ -27,6 +25,6 @@ body {
 
 .pokemon-image {
     image-rendering: crisp-edges;
-    width: 10vw;
+    width: 20vw;
     aspect-ratio: 1/1;
 }

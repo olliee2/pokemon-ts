@@ -64,15 +64,21 @@ export default class BattleEngine {
     [this.playerActivePokemon, this.opponentActivePokemon].forEach(
       (pokemon) => {
         if (pokemon.isBurned) {
-          pokemon.hp -= Math.max(1, Math.floor(pokemon.baseHP / 16));
+          pokemon.hp -= Math.floor(
+            Math.max(1, Math.floor(pokemon.baseHP / 16)),
+          );
         }
         if (pokemon.isPoisoned) {
-          pokemon.hp -= Math.max(1, Math.floor(pokemon.baseHP / 16));
+          pokemon.hp -= Math.floor(
+            Math.max(1, Math.floor(pokemon.baseHP / 16)),
+          );
         }
         if (pokemon.badlyPoisonedStage) {
-          pokemon.hp -= Math.max(
-            1,
-            (Math.floor(pokemon.baseHP) * pokemon.badlyPoisonedStage) / 16,
+          pokemon.hp -= Math.floor(
+            Math.max(
+              1,
+              (Math.floor(pokemon.baseHP) * pokemon.badlyPoisonedStage) / 16,
+            ),
           );
           pokemon.badlyPoisonedStage++;
         }
@@ -161,7 +167,7 @@ export default class BattleEngine {
       return;
     }
     if (attackingPokemon.isParalyzed && Math.random() < 0.25) {
-      Logger.log(`${attackingPokemon} is paralyzed and cannot move!`);
+      Logger.log(`${attackingPokemon.name} is paralyzed and cannot move!`);
     }
 
     Logger.log(
@@ -354,7 +360,7 @@ export default class BattleEngine {
             affectedPokemon.hp - damage * effect.strength,
           );
           Logger.log(
-            `${affectedPokemon.name} took ${affectedPokemon.hp - originalHP} recoil damage!`,
+            `${affectedPokemon.name} took ${originalHP - affectedPokemon.hp} recoil damage!`,
           );
           break;
         }

@@ -16,18 +16,7 @@ Contains the compiled JavaScript that is then ran.
 
 ## Supported Pokémon
 
-- Venusaur
-- Charizard
-- Blastoise
-- Butterfree
-- Beedrill
-- Pidgeot
-- Raticate
-- Fearow
-- Arbok
-- Raichu
-- Sandslash
-- Nidoqueen
+All fully evolved Generation 1 Pokémon.
 
 More to be added later!
 
