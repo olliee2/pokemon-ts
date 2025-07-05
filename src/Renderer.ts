@@ -34,8 +34,6 @@ export default class Renderer {
     private switch5Button: HTMLButtonElement,
     private switch6Button: HTMLButtonElement,
     private switchBackButton: HTMLButtonElement,
-    private playerStatus: HTMLElement,
-    private opponentStatus: HTMLElement,
   ) {
     this.setupEventListeners();
     this.render();
@@ -138,18 +136,16 @@ export default class Renderer {
 
   changePokemon(): void {
     const playerPokemon = this.engine.playerActivePokemon;
-    this.playerName.textContent = playerPokemon.name;
+    this.playerName.textContent = `${playerPokemon.name} ${this.getPokemonStatus(playerPokemon)}`;
     this.playerHP.textContent = `HP: ${playerPokemon.hp}/${playerPokemon.baseHP}`;
     this.playerHPBar.value = playerPokemon.hp / playerPokemon.baseHP;
     this.playerImage.src = `assets/back/${playerPokemon.name}.png`;
-    this.playerStatus.textContent = this.getPokemonStatus(playerPokemon);
 
     const opponentPokemon = this.engine.opponentActivePokemon;
-    this.opponentName.textContent = opponentPokemon.name;
+    this.opponentName.textContent = `${opponentPokemon.name} ${this.getPokemonStatus(opponentPokemon)}`;
     this.opponentHP.textContent = `HP: ${opponentPokemon.hp}/${opponentPokemon.baseHP}`;
     this.opponentHPBar.value = opponentPokemon.hp / opponentPokemon.baseHP;
     this.opponentImage.src = `assets/front/${opponentPokemon.name}.png`;
-    this.opponentStatus.textContent = this.getPokemonStatus(opponentPokemon);
   }
 
   async useMove(moveIndex: number): Promise<void> {
@@ -176,8 +172,15 @@ export default class Renderer {
       };
 
       const result = this.engine.selectMove(moveToUse);
+      const firstPlayer = this.engine.calculateFirstPlayer(
+        this.engine.playerActivePokemon,
+        moves[moveToUse],
+        this.engine.opponentActivePokemon,
+        this.engine.selectOpponentMove(),
+      );
 
       await this.animateBattleSequence(
+        firstPlayer,
         playerPokemonBefore,
         opponentPokemonBefore,
         result,
@@ -215,18 +218,19 @@ export default class Renderer {
   }
 
   private getPokemonStatus(pokemon: Pokemon): string {
-    if (pokemon.isBurned) return 'Burned';
-    if (pokemon.isPoisoned) return 'Poisoned';
-    if (pokemon.badlyPoisonedStage) return 'Badly Poisoned';
-    if (pokemon.isFrozen) return 'Frozen';
-    if (pokemon.isParalyzed) return 'Paralyzed';
-    if (pokemon.sleepStage) return 'Asleep';
-    return 'Healthy';
+    if (pokemon.isBurned) return '🔥';
+    if (pokemon.isPoisoned) return '☠️';
+    if (pokemon.badlyPoisonedStage) return '☠️☠️';
+    if (pokemon.isFrozen) return '❄️';
+    if (pokemon.isParalyzed) return '⚡';
+    if (pokemon.sleepStage) return '😴';
+    return '';
   }
 
   private async animateBattleSequence(
-    playerBefore: { pokemon: any; hp: number },
-    opponentBefore: { pokemon: any; hp: number },
+    firstPlayer: 'player' | 'opponent',
+    playerBefore: { pokemon: Pokemon; hp: number },
+    opponentBefore: { pokemon: Pokemon; hp: number },
     result: 'Pokemon Select' | 'Player Win' | 'Opponent Win' | undefined,
   ): Promise<void> {
     const battleEndedEarly =
@@ -234,42 +238,64 @@ export default class Renderer {
       result === 'Player Win' ||
       result === 'Opponent Win';
 
-    await this.animateAttack(this.playerImage);
-    await this.sleep(200);
+    if (firstPlayer === 'player') {
+      await this.animateAttack(this.playerImage);
+      await this.sleep(200);
 
-    if (
-      this.engine.opponentActivePokemon.hp < opponentBefore.hp ||
-      (battleEndedEarly &&
-        opponentBefore.pokemon === this.engine.opponentActivePokemon)
-    ) {
-      await this.animateDamage(this.opponentImage);
-      await this.animateHPChange(
-        this.opponentHPBar,
-        this.opponentHP,
-        this.engine.opponentActivePokemon,
-      );
-    }
-
-    if (this.engine.opponentActivePokemon.hp <= 0) {
-      await this.animateFaint(this.opponentImage);
-      await this.sleep(500);
-
-      if (this.engine.opponentActivePokemon.hp > 0) {
-        await this.animateSwitchIn(this.opponentImage);
+      if (
+        this.engine.opponentActivePokemon.hp < opponentBefore.hp ||
+        (battleEndedEarly &&
+          opponentBefore.pokemon === this.engine.opponentActivePokemon)
+      ) {
+        await this.animateDamage(this.opponentImage);
+        await this.animateHPChange(
+          this.opponentHPBar,
+          this.opponentHP,
+          this.engine.opponentActivePokemon,
+        );
       }
 
-      if (battleEndedEarly) {
-        return;
+      if (this.engine.opponentActivePokemon.hp <= 0) {
+        await this.animateFaint(this.opponentImage);
+        await this.sleep(500);
+
+        if (this.engine.opponentActivePokemon.hp > 0) {
+          await this.animateSwitchIn(this.opponentImage);
+        }
+
+        if (battleEndedEarly) {
+          return;
+        }
       }
-    }
 
-    if (this.engine.opponentActivePokemon.hp > 0 && !battleEndedEarly) {
-      await this.sleep(800);
+      if (this.engine.opponentActivePokemon.hp > 0 && !battleEndedEarly) {
+        await this.sleep(800);
+        await this.animateAttack(this.opponentImage);
+        await this.sleep(200);
 
+        if (this.engine.playerActivePokemon.hp < playerBefore.hp) {
+          await this.animateDamage(this.playerImage);
+          await this.animateHPChange(
+            this.playerHPBar,
+            this.playerHP,
+            this.engine.playerActivePokemon,
+          );
+        }
+
+        if (this.engine.playerActivePokemon.hp <= 0) {
+          await this.animateFaint(this.playerImage);
+          await this.sleep(500);
+        }
+      }
+    } else {
       await this.animateAttack(this.opponentImage);
       await this.sleep(200);
 
-      if (this.engine.playerActivePokemon.hp < playerBefore.hp) {
+      if (
+        this.engine.playerActivePokemon.hp < playerBefore.hp ||
+        (battleEndedEarly &&
+          playerBefore.pokemon === this.engine.playerActivePokemon)
+      ) {
         await this.animateDamage(this.playerImage);
         await this.animateHPChange(
           this.playerHPBar,
@@ -281,6 +307,34 @@ export default class Renderer {
       if (this.engine.playerActivePokemon.hp <= 0) {
         await this.animateFaint(this.playerImage);
         await this.sleep(500);
+
+        if (this.engine.playerActivePokemon.hp > 0) {
+          await this.animateSwitchIn(this.playerImage);
+        }
+
+        if (battleEndedEarly) {
+          return;
+        }
+      }
+
+      if (this.engine.playerActivePokemon.hp > 0 && !battleEndedEarly) {
+        await this.sleep(800);
+        await this.animateAttack(this.playerImage);
+        await this.sleep(200);
+
+        if (this.engine.opponentActivePokemon.hp < opponentBefore.hp) {
+          await this.animateDamage(this.opponentImage);
+          await this.animateHPChange(
+            this.opponentHPBar,
+            this.opponentHP,
+            this.engine.opponentActivePokemon,
+          );
+        }
+
+        if (this.engine.opponentActivePokemon.hp <= 0) {
+          await this.animateFaint(this.opponentImage);
+          await this.sleep(500);
+        }
       }
     }
   }
@@ -308,7 +362,7 @@ export default class Renderer {
   private async animateHPChange(
     hpBar: HTMLProgressElement,
     hpText: HTMLElement,
-    pokemon: any,
+    pokemon: Pokemon,
   ): Promise<void> {
     return new Promise((resolve) => {
       const targetValue = pokemon.hp / pokemon.baseHP;

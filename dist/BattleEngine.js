@@ -32,10 +32,15 @@ export default class BattleEngine {
             ];
         Logger.newTurn();
         this.useMove(firstPokemon, secondPokemon, firstMove);
+        if (firstPokemon.hp > 0) {
+            this.useMove(firstPokemon, secondPokemon, firstMove);
+        }
         const result = this.checkBattleState();
         if (result)
             return result;
-        this.useMove(secondPokemon, firstPokemon, secondMove);
+        if (secondPokemon.hp > 0) {
+            this.useMove(secondPokemon, firstPokemon, secondMove);
+        }
         this.handleTurnEnd();
         return this.checkBattleState();
     }
@@ -88,16 +93,6 @@ export default class BattleEngine {
             Logger.log(`You sent out ${selectedPokemon.name}!`);
         }
     }
-    selectOpponentMove() {
-        const opponentValidMoves = this.opponentActivePokemon.moves.filter((move) => move.pp);
-        const opponentValidMovesTotal = opponentValidMoves.length;
-        const opponentMoveIndex = opponentValidMovesTotal
-            ? Math.floor(Math.random() * opponentValidMovesTotal)
-            : -1;
-        return opponentMoveIndex >= 0
-            ? this.opponentActivePokemon.moves[opponentMoveIndex]
-            : structuredClone(moveData.Struggle);
-    }
     calculateFirstPlayer(playerActivePokemon, playerMove, opponentActivePokemon, opponentMove) {
         if (playerMove === undefined)
             return 'opponent';
@@ -112,6 +107,26 @@ export default class BattleEngine {
         if (Math.random() > 0.5)
             return 'player';
         return 'opponent';
+    }
+    selectOpponentPokemon() {
+        const opponentValidPokemon = this.opponentTeam.filter((pokemon) => pokemon.hp > 0);
+        const opponentValidPokemonTotal = opponentValidPokemon.length;
+        const opponentPokemonIndex = opponentValidPokemonTotal
+            ? Math.floor(Math.random() * opponentValidPokemonTotal)
+            : -1;
+        return opponentPokemonIndex >= 0
+            ? this.opponentTeam[opponentPokemonIndex]
+            : this.opponentTeam[0];
+    }
+    selectOpponentMove() {
+        const opponentValidMoves = this.opponentActivePokemon.moves.filter((move) => move.pp);
+        const opponentValidMovesTotal = opponentValidMoves.length;
+        const opponentMoveIndex = opponentValidMovesTotal
+            ? Math.floor(Math.random() * opponentValidMovesTotal)
+            : -1;
+        return opponentMoveIndex >= 0
+            ? this.opponentActivePokemon.moves[opponentMoveIndex]
+            : structuredClone(moveData.Struggle);
     }
     useMove(attackingPokemon, defendingPokemon, move) {
         if (move === undefined)
@@ -274,16 +289,6 @@ export default class BattleEngine {
             }
         }
         this.synchronizeStats();
-    }
-    selectOpponentPokemon() {
-        const opponentValidPokemon = this.opponentTeam.filter((pokemon) => pokemon.hp > 0);
-        const opponentValidPokemonTotal = opponentValidPokemon.length;
-        const opponentPokemonIndex = opponentValidPokemonTotal
-            ? Math.floor(Math.random() * opponentValidPokemonTotal)
-            : -1;
-        return opponentPokemonIndex >= 0
-            ? this.opponentTeam[opponentPokemonIndex]
-            : this.opponentTeam[0];
     }
     synchronizeStats() {
         const stageMultiplier = [

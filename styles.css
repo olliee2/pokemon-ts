@@ -65,23 +65,14 @@ h1 {
 }
 
 .pokemon-hp-bar::-webkit-progress-value {
-    background: linear-gradient(90deg, #66bb6a 0%, #ffa726 80%, #d32f2f 100%);
+    background: #66bb6a;
     border-radius: 8px;
 }
 
 .pokemon-hp-bar::-moz-progress-bar {
-    background: linear-gradient(90deg, #66bb6a 0%, #ffa726 80%, #d32f2f 100%);
+    background: #66bb6a;
     border-radius: 8px;
 }
-
-.pokemon-hp-bar[value="1"]::-webkit-progress-value {
-    background: #66bb6a;
-}
-
-.pokemon-hp-bar[value="0"]::-webkit-progress-value {
-    background: #d32f2f;
-}
-
 
 .pokemon-image {
     image-rendering: crisp-edges;

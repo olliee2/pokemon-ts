@@ -237,8 +237,6 @@ export default class TeamBuilder {
     const switchBackButton = document.getElementById(
       'switch-back-button',
     )! as HTMLButtonElement;
-    const playerStatus = document.getElementById('player-status')!;
-    const opponentStatus = document.getElementById('opponent-status')!;
 
     const renderer = new Renderer(
       engine,
@@ -267,8 +265,6 @@ export default class TeamBuilder {
       switch5Button,
       switch6Button,
       switchBackButton,
-      playerStatus,
-      opponentStatus,
     );
 
     void renderer;

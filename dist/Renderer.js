@@ -1,6 +1,6 @@
 import Logger from './Logger.js';
 export default class Renderer {
-    constructor(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton, playerStatus, opponentStatus) {
+    constructor(engine, playerName, playerHP, playerHPBar, playerImage, opponentName, opponentHP, opponentHPBar, opponentImage, mainButtons, moveButton, switchButton, moveButtons, move1Button, move2Button, move3Button, move4Button, moveBackButton, switchButtons, switch1Button, switch2Button, switch3Button, switch4Button, switch5Button, switch6Button, switchBackButton) {
         this.engine = engine;
         this.playerName = playerName;
         this.playerHP = playerHP;
@@ -27,8 +27,6 @@ export default class Renderer {
         this.switch5Button = switch5Button;
         this.switch6Button = switch6Button;
         this.switchBackButton = switchBackButton;
-        this.playerStatus = playerStatus;
-        this.opponentStatus = opponentStatus;
         this.isAnimating = false;
         this.setupEventListeners();
         this.render();
@@ -120,17 +118,15 @@ export default class Renderer {
     }
     changePokemon() {
         const playerPokemon = this.engine.playerActivePokemon;
-        this.playerName.textContent = playerPokemon.name;
+        this.playerName.textContent = `${playerPokemon.name} ${this.getPokemonStatus(playerPokemon)}`;
         this.playerHP.textContent = `HP: ${playerPokemon.hp}/${playerPokemon.baseHP}`;
         this.playerHPBar.value = playerPokemon.hp / playerPokemon.baseHP;
         this.playerImage.src = `assets/back/${playerPokemon.name}.png`;
-        this.playerStatus.textContent = this.getPokemonStatus(playerPokemon);
         const opponentPokemon = this.engine.opponentActivePokemon;
-        this.opponentName.textContent = opponentPokemon.name;
+        this.opponentName.textContent = `${opponentPokemon.name} ${this.getPokemonStatus(opponentPokemon)}`;
         this.opponentHP.textContent = `HP: ${opponentPokemon.hp}/${opponentPokemon.baseHP}`;
         this.opponentHPBar.value = opponentPokemon.hp / opponentPokemon.baseHP;
         this.opponentImage.src = `assets/front/${opponentPokemon.name}.png`;
-        this.opponentStatus.textContent = this.getPokemonStatus(opponentPokemon);
     }
     async useMove(moveIndex) {
         if (this.isAnimating || this.engine.playerActivePokemon.hp <= 0)
@@ -153,7 +149,8 @@ export default class Renderer {
                 hp: this.engine.opponentActivePokemon.hp,
             };
             const result = this.engine.selectMove(moveToUse);
-            await this.animateBattleSequence(playerPokemonBefore, opponentPokemonBefore, result);
+            const firstPlayer = this.engine.calculateFirstPlayer(this.engine.playerActivePokemon, moves[moveToUse], this.engine.opponentActivePokemon, this.engine.selectOpponentMove());
+            await this.animateBattleSequence(firstPlayer, playerPokemonBefore, opponentPokemonBefore, result);
             this.handleResult(result);
             this.render();
         }
@@ -182,52 +179,87 @@ export default class Renderer {
     }
     getPokemonStatus(pokemon) {
         if (pokemon.isBurned)
-            return 'Burned';
+            return '🔥';
         if (pokemon.isPoisoned)
-            return 'Poisoned';
+            return '☠️';
         if (pokemon.badlyPoisonedStage)
-            return 'Badly Poisoned';
+            return '☠️☠️';
         if (pokemon.isFrozen)
-            return 'Frozen';
+            return '❄️';
         if (pokemon.isParalyzed)
-            return 'Paralyzed';
+            return '⚡';
         if (pokemon.sleepStage)
-            return 'Asleep';
-        return 'Healthy';
+            return '😴';
+        return '';
     }
-    async animateBattleSequence(playerBefore, opponentBefore, result) {
+    async animateBattleSequence(firstPlayer, playerBefore, opponentBefore, result) {
         const battleEndedEarly = result === 'Pokemon Select' ||
             result === 'Player Win' ||
             result === 'Opponent Win';
-        await this.animateAttack(this.playerImage);
-        await this.sleep(200);
-        if (this.engine.opponentActivePokemon.hp < opponentBefore.hp ||
-            (battleEndedEarly &&
-                opponentBefore.pokemon === this.engine.opponentActivePokemon)) {
-            await this.animateDamage(this.opponentImage);
-            await this.animateHPChange(this.opponentHPBar, this.opponentHP, this.engine.opponentActivePokemon);
-        }
-        if (this.engine.opponentActivePokemon.hp <= 0) {
-            await this.animateFaint(this.opponentImage);
-            await this.sleep(500);
-            if (this.engine.opponentActivePokemon.hp > 0) {
-                await this.animateSwitchIn(this.opponentImage);
+        if (firstPlayer === 'player') {
+            await this.animateAttack(this.playerImage);
+            await this.sleep(200);
+            if (this.engine.opponentActivePokemon.hp < opponentBefore.hp ||
+                (battleEndedEarly &&
+                    opponentBefore.pokemon === this.engine.opponentActivePokemon)) {
+                await this.animateDamage(this.opponentImage);
+                await this.animateHPChange(this.opponentHPBar, this.opponentHP, this.engine.opponentActivePokemon);
             }
-            if (battleEndedEarly) {
-                return;
+            if (this.engine.opponentActivePokemon.hp <= 0) {
+                await this.animateFaint(this.opponentImage);
+                await this.sleep(500);
+                if (this.engine.opponentActivePokemon.hp > 0) {
+                    await this.animateSwitchIn(this.opponentImage);
+                }
+                if (battleEndedEarly) {
+                    return;
+                }
+            }
+            if (this.engine.opponentActivePokemon.hp > 0 && !battleEndedEarly) {
+                await this.sleep(800);
+                await this.animateAttack(this.opponentImage);
+                await this.sleep(200);
+                if (this.engine.playerActivePokemon.hp < playerBefore.hp) {
+                    await this.animateDamage(this.playerImage);
+                    await this.animateHPChange(this.playerHPBar, this.playerHP, this.engine.playerActivePokemon);
+                }
+                if (this.engine.playerActivePokemon.hp <= 0) {
+                    await this.animateFaint(this.playerImage);
+                    await this.sleep(500);
+                }
             }
         }
-        if (this.engine.opponentActivePokemon.hp > 0 && !battleEndedEarly) {
-            await this.sleep(800);
+        else {
             await this.animateAttack(this.opponentImage);
             await this.sleep(200);
-            if (this.engine.playerActivePokemon.hp < playerBefore.hp) {
+            if (this.engine.playerActivePokemon.hp < playerBefore.hp ||
+                (battleEndedEarly &&
+                    playerBefore.pokemon === this.engine.playerActivePokemon)) {
                 await this.animateDamage(this.playerImage);
                 await this.animateHPChange(this.playerHPBar, this.playerHP, this.engine.playerActivePokemon);
             }
             if (this.engine.playerActivePokemon.hp <= 0) {
                 await this.animateFaint(this.playerImage);
                 await this.sleep(500);
+                if (this.engine.playerActivePokemon.hp > 0) {
+                    await this.animateSwitchIn(this.playerImage);
+                }
+                if (battleEndedEarly) {
+                    return;
+                }
+            }
+            if (this.engine.playerActivePokemon.hp > 0 && !battleEndedEarly) {
+                await this.sleep(800);
+                await this.animateAttack(this.playerImage);
+                await this.sleep(200);
+                if (this.engine.opponentActivePokemon.hp < opponentBefore.hp) {
+                    await this.animateDamage(this.opponentImage);
+                    await this.animateHPChange(this.opponentHPBar, this.opponentHP, this.engine.opponentActivePokemon);
+                }
+                if (this.engine.opponentActivePokemon.hp <= 0) {
+                    await this.animateFaint(this.opponentImage);
+                    await this.sleep(500);
+                }
             }
         }
     }
