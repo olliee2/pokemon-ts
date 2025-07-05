@@ -32,12 +32,6 @@ export default class BattleEngine {
             ];
         Logger.newTurn();
         this.useMove(firstPokemon, secondPokemon, firstMove);
-        if (firstPokemon.hp > 0) {
-            this.useMove(firstPokemon, secondPokemon, firstMove);
-        }
-        const result = this.checkBattleState();
-        if (result)
-            return result;
         if (secondPokemon.hp > 0) {
             this.useMove(secondPokemon, firstPokemon, secondMove);
         }
@@ -277,7 +271,7 @@ export default class BattleEngine {
                 case 'drain': {
                     const originalHP = affectedPokemon.hp;
                     affectedPokemon.hp = Math.floor(Math.min(affectedPokemon.baseHP, affectedPokemon.hp + damage * effect.strength));
-                    Logger.log(`${affectedPokemon} healed ${affectedPokemon.hp - originalHP}!`);
+                    Logger.log(`${affectedPokemon.name} healed ${affectedPokemon.hp - originalHP}!`);
                     break;
                 }
                 case 'recoil': {

@@ -54,13 +54,6 @@ export default class BattleEngine {
 
     Logger.newTurn();
     this.useMove(firstPokemon, secondPokemon, firstMove);
-    if (firstPokemon.hp > 0) {
-      this.useMove(firstPokemon, secondPokemon, firstMove);
-    }
-
-    const result = this.checkBattleState();
-    if (result) return result;
-
     if (secondPokemon.hp > 0) {
       this.useMove(secondPokemon, firstPokemon, secondMove);
     }
@@ -389,7 +382,7 @@ export default class BattleEngine {
             ),
           );
           Logger.log(
-            `${affectedPokemon} healed ${affectedPokemon.hp - originalHP}!`,
+            `${affectedPokemon.name} healed ${affectedPokemon.hp - originalHP}!`,
           );
           break;
         }
