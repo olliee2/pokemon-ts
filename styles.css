@@ -85,5 +85,63 @@ h1 {
 .pokemon-image {
     image-rendering: crisp-edges;
     width: 20vw;
+    min-width: 120px;
+    max-width: 180px;
     aspect-ratio: 1/1;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: #f5f5f5;
+    border-radius: 50%;
+    border: 3px solid #bdbdbd;
+}
+
+#main-buttons,
+#move-buttons,
+#switch-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+button {
+    background: linear-gradient(90deg, #ef5350 0%, #fbc02d 100%);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+button:hover, button:focus {
+    background: linear-gradient(90deg, #fbc02d 0%, #ef5350 100%);
+    transform: translateY(-2px) scale(1.04);
+}
+
+#battle-log {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 6px rgba(44, 62, 80, 0.08);
+    max-height: 220px;
+    overflow-y: auto;
+    font-size: 1rem;
+}
+
+#battle-log li {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
+
+#battle-log li:last-child {
+    border-bottom: none;
+    background: #fffde7;
+    font-weight: bold;
 }
