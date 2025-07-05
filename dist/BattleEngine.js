@@ -275,7 +275,7 @@ export default class BattleEngine {
         this.synchronizeStats();
     }
     selectOpponentPokemon() {
-        const opponentValidPokemon = this.opponentTeam.filter((pokemon) => pokemon.hp >= 0);
+        const opponentValidPokemon = this.opponentTeam.filter((pokemon) => pokemon.hp > 0);
         const opponentValidPokemonTotal = opponentValidPokemon.length;
         const opponentPokemonIndex = opponentValidPokemonTotal
             ? Math.floor(Math.random() * opponentValidPokemonTotal)

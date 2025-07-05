@@ -383,7 +383,7 @@ export default class BattleEngine {
 
   private selectOpponentPokemon(): Pokemon {
     const opponentValidPokemon = this.opponentTeam.filter(
-      (pokemon) => pokemon.hp >= 0,
+      (pokemon) => pokemon.hp > 0,
     );
     const opponentValidPokemonTotal = opponentValidPokemon.length;
     const opponentPokemonIndex = opponentValidPokemonTotal

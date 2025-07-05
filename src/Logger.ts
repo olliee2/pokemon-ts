@@ -20,8 +20,17 @@ export default class Logger {
     if (!Logger.list) {
       throw new Error('Logger not initialized.');
     }
+
+    const isScrolledToBottom =
+      this.list.scrollHeight - this.list.clientHeight <=
+      this.list.scrollTop + 1;
+
     const li = document.createElement('li');
     li.textContent = message;
     Logger.list.append(li);
+
+    if (isScrolledToBottom) {
+      this.list.scrollTop = this.list.scrollHeight - this.list.clientHeight;
+    }
   }
 }
