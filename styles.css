@@ -139,6 +139,7 @@ button:active {
 .current-log {
     background: #fffde7;
     font-weight: bold;
+    font-style: italic;
 }
 
 #team-builder {
